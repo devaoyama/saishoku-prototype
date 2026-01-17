@@ -1,0 +1,276 @@
+saishoku_agent_design_config:
+  meta:
+    service_name: "才職エージェント (Saishoku Agent)"
+    version: "1.0.0"
+    concept: "今よりもっと輝ける。才能を、最適な職へ。"
+    description: "キャリアも、マインドも、ビジュアルも。人間的市場価値の最大化を支援する20代特化型キャリアパートナーサービス"
+
+  # ---------------------------------------------------
+  # 1. Brand Identity & Visual Foundation
+  # ---------------------------------------------------
+  brand_identity:
+    mood_board:
+      keywords:
+        - "Bloom (開花)"
+        - "Partner (味方)"
+        - "Elegance (洗練)"
+        - "Empowerment (自己実現)"
+      visual_style: "Soft Luxury (柔らかな高級感)"
+      note: "花のモチーフで成長・開花を表現しつつ、信頼できるプロフェッショナルさを両立"
+
+  theme_settings:
+    colors:
+      palette:
+        primary_pink:
+          hex: "#FF6B9D"
+          name: "Bloom Pink"
+          usage: "CTAボタン、重要な数値、ブランドアクセント、花の装飾"
+        primary_blue:
+          hex: "#4FACFE"
+          name: "Sky Blue"
+          usage: "サブアクション、プロセス表示、信頼性の演出、グラデーション"
+        accent:
+          hex: "#FFB8D0"
+          name: "Soft Petal"
+          usage: "ホバー演出、薄いピンクの装飾要素"
+        background:
+          gradient:
+            type: "radial"
+            colors: ["#FFF5F8", "#F0F8FF", "#FFF5F8"]
+          name: "Aurora Mist"
+          usage: "メイン背景（淡いピンク〜ブルーのグラデーション）"
+        gradient_cta:
+          type: "linear"
+          direction: "135deg"
+          colors: ["#FF6B9D", "#4FACFE"]
+          name: "Bloom Gradient"
+          usage: "CTAボタン、キャンペーンバナー、強調エリア"
+        surface:
+          hex: "#FFFFFF"
+          name: "Pure White"
+          usage: "カード背景、コンテンツエリア"
+        text:
+          primary: "#1A1A1A"
+          secondary: "#666666"
+          accent: "#FF6B9D"
+
+    typography:
+      font_family:
+        headings:
+          jp: ["Noto Sans JP", "Hiragino Sans", "sans-serif"]
+          weight: 700
+          style: "キャッチコピーは手書き風・筆記体SVGも活用"
+        body:
+          base: ["Noto Sans JP", "Hiragino Sans", "sans-serif"]
+          weight: [400, 500]
+        numbers:
+          family: ["Poppins", "sans-serif"]
+          weight: 600
+          note: "年収やパーセンテージ表示に使用"
+        accent:
+          note: "「#100%年収アップ目標」などのハッシュタグ表現"
+
+    layout_rules:
+      borders:
+        width: "1px"
+        style: "solid"
+        color: "rgba(233, 30, 140, 0.2)"
+        radius:
+          sm: "8px"
+          md: "16px"
+          lg: "24px"
+          full: "9999px"
+          blob: "30% 70% 70% 30% / 30% 30% 70% 70%"
+
+      shadows:
+        soft:
+          default: "0px 4px 20px rgba(255, 107, 157, 0.15)"
+          hover: "0px 8px 30px rgba(255, 107, 157, 0.25)"
+        glow:
+          pink: "0px 0px 40px rgba(255, 107, 157, 0.3)"
+          blue: "0px 0px 40px rgba(79, 172, 254, 0.3)"
+          effect: "ヒーローエリアの背景グロー演出"
+
+      decorations:
+        flowers:
+          style: "線画風のシンプルな花イラスト"
+          colors: ["#FF6B9D", "#4FACFE", "#FFB8D0", "#A8D8FF"]
+          animation: "ゆっくりとした浮遊アニメーション"
+          placement: "セクション間の装飾、背景のアクセント"
+
+  # ---------------------------------------------------
+  # 2. UI Components Specification
+  # ---------------------------------------------------
+  components:
+    hero_section:
+      description: "第一印象で『輝ける未来』を想起させる"
+      elements:
+        - "Main Copy (手書き風SVG: 今よりもっと輝ける)"
+        - "Sub Copy (サービス説明)"
+        - "Hashtag Pills (#100%年収アップ目標 など)"
+        - "Background Glow (オーロラ風グラデーション)"
+        - "Floating Flowers (装飾)"
+      interaction: "スクロールに応じた花のパララックス効果"
+
+    buttons:
+      cta_primary:
+        shape: "Pill (角丸カプセル型)"
+        style: "Gradient Fill (Magenta to Pink) + Subtle Shadow"
+        content: "TEXT + Arrow Icon"
+        hover: "Scale up + Glow effect"
+        note: "「予約はこちら」「詳細はこちら」に使用"
+      cta_secondary:
+        shape: "Pill with Border"
+        style: "Transparent + Magenta Border"
+        hover: "Fill with light pink"
+
+    partner_card:
+      description: "キャリアパートナーを魅力的に紹介"
+      elements:
+        - "Photo (円形またはblob型マスク)"
+        - "Name (日本語)"
+        - "Tagline (戦略思考人材、フレンドリーM&Aなど)"
+        - "SNS Links (X, Instagram アイコン)"
+      style:
+        background: "#FFFFFF"
+        border: "none"
+        shadow: "soft"
+        hover: "カード全体が少し浮き上がる"
+
+    check_card:
+      description: "ペインポイント（モヤモヤ）の提示"
+      elements:
+        - "Check Number (CHECK01, 02, 03)"
+        - "Illustration (イラスト)"
+        - "Heading (課題タイトル)"
+        - "Description (詳細説明)"
+      style:
+        layout: "横並び3カラム（モバイルは縦積み）"
+        number_style: "Magenta色、小さめのラベル"
+
+    process_timeline:
+      description: "サポートの流れを視覚的に表示"
+      elements:
+        - "Step Number (01-06)"
+        - "Step Title"
+        - "Step Description"
+        - "Connector Line (ピンク⇔ブルーの交互)"
+      style:
+        number_badge:
+          shape: "circle"
+          colors: ["#FFB6D9", "#B8D4F0"]
+          pattern: "交互に色を変える"
+        line: "縦のタイムライン形式"
+
+    voice_card:
+      description: "求職者の声（体験談）"
+      elements:
+        - "Avatar (イラストまたは写真)"
+        - "Profile (年代・業界・性別)"
+        - "Heading (体験のハイライト)"
+        - "Testimonial (詳細コメント)"
+      style:
+        background: "#FFFFFF"
+        border_left: "4px solid #E91E8C"
+        shadow: "soft"
+
+    campaign_banner:
+      description: "期間限定キャンペーン告知"
+      elements:
+        - "Campaign Title (お年玉キャンペーン)"
+        - "Benefit (5,000円プレゼント)"
+        - "CTA Button"
+        - "Notes (条件など)"
+      style:
+        background: "Gradient (Magenta to Purple)"
+        text_color: "#FFFFFF"
+        shape: "rounded rectangle with decorative flowers"
+
+    hashtag_pill:
+      description: "特徴を端的に伝えるタグ"
+      style:
+        background: "rgba(233, 30, 140, 0.1)"
+        text_color: "#E91E8C"
+        border_radius: "full"
+        padding: "4px 16px"
+        prefix: "#"
+      examples:
+        - "#100%年収アップ目標"
+        - "#ライフプランから設計"
+        - "#20代営業・ビジネス職特化"
+
+  # ---------------------------------------------------
+  # 3. Animation & Micro-interactions
+  # ---------------------------------------------------
+  animations:
+    flower_float:
+      type: "keyframes"
+      properties: "translateY, rotate"
+      duration: "6s"
+      easing: "ease-in-out"
+      note: "背景の花がゆっくり浮遊"
+
+    fade_in_up:
+      type: "scroll-triggered"
+      properties: "opacity, translateY"
+      duration: "0.6s"
+      easing: "ease-out"
+      note: "セクション表示時のフェードイン"
+
+    button_bounce:
+      type: "hover"
+      properties: "scale, shadow"
+      duration: "0.2s"
+      note: "CTAボタンの押し心地"
+
+    card_lift:
+      type: "hover"
+      properties: "translateY, shadow"
+      duration: "0.3s"
+      note: "カードホバー時の浮き上がり"
+
+  # ---------------------------------------------------
+  # 4. Tone of Voice (UX Writing)
+  # ---------------------------------------------------
+  ux_writing:
+    voice: "Warm, Empowering, Professional"
+    keywords:
+      - "輝ける (Shine)"
+      - "味方 (Ally)"
+      - "二人三脚 (Partnership)"
+      - "市場価値の最大化 (Maximize Value)"
+    rules:
+      - "ユーザーの可能性を常に肯定する（「今よりもっと輝ける」）"
+      - "堅苦しいビジネス用語は避け、親しみやすく温かい表現を使う"
+      - "「エージェント」ではなく「パートナー」として寄り添う姿勢を強調"
+      - "転職活動の不安を認めつつ、前向きな未来像を提示する"
+      - "数値（年収アップ率など）は具体的に示し、信頼性を担保"
+    
+    copy_examples:
+      headings:
+        - "今よりもっと輝ける。"
+        - "才能を、最適な職へ。"
+        - "キャリアも、見た目も、マインドも。"
+      cta:
+        - "予約はこちら"
+        - "詳細はこちら"
+        - "一覧はこちら"
+      support:
+        - "最高の味方であるパートナーと共に"
+        - "本当に自分らしく輝ける企業との出会い"
+        - "建前ではない、本音の対話"
+
+  # ---------------------------------------------------
+  # 5. Responsive Design
+  # ---------------------------------------------------
+  responsive:
+    breakpoints:
+      mobile: "< 640px"
+      tablet: "640px - 1024px"
+      desktop: "> 1024px"
+    
+    mobile_considerations:
+      - "花の装飾は数を減らし、パフォーマンスを優先"
+      - "パートナーカードは横スクロール形式"
+      - "CTAボタンは画面下部に固定表示を検討"
+      - "フォントサイズは可読性を最優先"
