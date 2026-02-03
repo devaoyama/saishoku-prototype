@@ -5,24 +5,28 @@ import {
   Clock,
   ExternalLink,
   MessageCircle,
+  Phone,
   Video,
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { FloatingFlowers } from "@/components/flower-decoration";
 import { Footer, Header } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { partners } from "@/lib/mock-data";
 
 function MeetingContent() {
   const searchParams = useSearchParams();
   const partnerId = searchParams.get("partner");
+  const connectionType = searchParams.get("type") || "zoom"; // zoom or phone
   const partner = partners.find((p) => p.id === partnerId);
 
-  // Mock Zoom URL
+  // Mock Zoom URL and Phone Number
   const zoomUrl = "https://zoom.us/j/1234567890?pwd=example";
+  const phoneNumber = "03-1234-5678"; // パートナーの電話番号（IP電話）
 
   return (
     <main className="relative z-10 min-h-screen pt-20">
@@ -37,7 +41,7 @@ function MeetingContent() {
               準備完了！
             </h1>
             <p className="text-[var(--muted-foreground)]">
-              下のボタンからZoomミーティングに参加してください
+              お好みの方法で面談を開始してください
             </p>
           </div>
 
@@ -72,35 +76,77 @@ function MeetingContent() {
             </Card>
           )}
 
-          {/* Zoom Join Card */}
-          <Card className="border-none shadow-soft bg-bloom-gradient text-white overflow-hidden animate-fade-in-up stagger-2">
-            <CardContent className="p-8 text-center relative">
-              {/* Decorative Elements */}
-              <div className="absolute top-4 left-4 w-20 h-20 rounded-full bg-white/10 blur-2xl" />
-              <div className="absolute bottom-4 right-4 w-32 h-32 rounded-full bg-white/10 blur-3xl" />
+          {/* Connection Options */}
+          <Card className="border-none shadow-soft overflow-hidden animate-fade-in-up stagger-2">
+            <Tabs defaultValue={connectionType} className="w-full">
+              <TabsList className="w-full rounded-none border-b">
+                <TabsTrigger value="zoom" className="flex-1">
+                  <Video size={16} className="mr-2" />
+                  Zoomで参加
+                </TabsTrigger>
+                <TabsTrigger value="phone" className="flex-1">
+                  <Phone size={16} className="mr-2" />
+                  電話で参加
+                </TabsTrigger>
+              </TabsList>
 
-              <div className="relative z-10">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/20 flex items-center justify-center">
-                  <Video size={32} />
+              {/* Zoom Tab */}
+              <TabsContent value="zoom" className="mt-0">
+                <div className="bg-bloom-gradient text-white p-8 text-center relative">
+                  <div className="absolute top-4 left-4 w-20 h-20 rounded-full bg-white/10 blur-2xl" />
+                  <div className="absolute bottom-4 right-4 w-32 h-32 rounded-full bg-white/10 blur-3xl" />
+
+                  <div className="relative z-10">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/20 flex items-center justify-center">
+                      <Video size={32} />
+                    </div>
+                    <h2 className="text-xl font-bold mb-2">Zoomミーティング</h2>
+                    <p className="text-white/80 text-sm mb-6">
+                      パートナーがお待ちしています
+                    </p>
+                    <a
+                      href={zoomUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block"
+                    >
+                      <Button className="bg-white text-[var(--primary)] hover:bg-white/90 rounded-full px-8 py-6 text-lg font-bold animate-pulse-glow">
+                        <Video size={20} className="mr-2" />
+                        Zoomに参加する
+                        <ExternalLink size={18} className="ml-2" />
+                      </Button>
+                    </a>
+                  </div>
                 </div>
-                <h2 className="text-xl font-bold mb-2">Zoomミーティング</h2>
-                <p className="text-white/80 text-sm mb-6">
-                  パートナーがお待ちしています
-                </p>
-                <a
-                  href={zoomUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block"
-                >
-                  <Button className="bg-white text-[var(--primary)] hover:bg-white/90 rounded-full px-8 py-6 text-lg font-bold animate-pulse-glow">
-                    <Video size={20} className="mr-2" />
-                    Zoomに参加する
-                    <ExternalLink size={18} className="ml-2" />
-                  </Button>
-                </a>
-              </div>
-            </CardContent>
+              </TabsContent>
+
+              {/* Phone Tab */}
+              <TabsContent value="phone" className="mt-0">
+                <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white p-8 text-center relative">
+                  <div className="absolute top-4 left-4 w-20 h-20 rounded-full bg-white/10 blur-2xl" />
+                  <div className="absolute bottom-4 right-4 w-32 h-32 rounded-full bg-white/10 blur-3xl" />
+
+                  <div className="relative z-10">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/20 flex items-center justify-center">
+                      <Phone size={32} />
+                    </div>
+                    <h2 className="text-xl font-bold mb-2">電話で相談</h2>
+                    <p className="text-white/80 text-sm mb-2">
+                      下のボタンをタップして電話をかけてください
+                    </p>
+                    <p className="text-white/60 text-xs mb-6">
+                      ※ 通話料はお客様負担となります
+                    </p>
+                    <a href={`tel:${phoneNumber.replace(/-/g, "")}`} className="inline-block">
+                      <Button className="bg-white text-green-600 hover:bg-white/90 rounded-full px-8 py-6 text-lg font-bold animate-pulse-glow">
+                        <Phone size={20} className="mr-2" />
+                        {phoneNumber}に電話する
+                      </Button>
+                    </a>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </Card>
 
           {/* Tips */}
