@@ -332,3 +332,39 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #FF6B9D;
 }
+
+/* ---------------------------------------------------
+   Admin Layout (管理画面) - ユーザー画面と別のデザイン
+   --------------------------------------------------- */
+.admin-layout {
+  --background: #f1f5f9;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --muted: #e2e8f0;
+  --muted-foreground: #64748b;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #475569;
+  --sidebar: #0f172a;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #334155;
+  --sidebar-ring: #3b82f6;
+}
+
+/* 管理画面用スクロールバー */
+.admin-layout ::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+
+.admin-layout ::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+}
+
+.admin-layout ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}

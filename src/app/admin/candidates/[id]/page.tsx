@@ -4,16 +4,19 @@ import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import {
   ArrowLeft,
+  Award,
   Briefcase,
   Calendar,
   ChevronRight,
   Clock,
   DollarSign,
   Edit,
+  FileText,
   Mail,
   MessageSquare,
   Phone,
   Plus,
+  Sparkles,
   Tag,
   User,
 } from "lucide-react";
@@ -21,8 +24,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { FloatingFlowers } from "@/components/flower-decoration";
-import { Footer, Header } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -74,13 +75,9 @@ export default function CandidateDetailPage() {
 
   if (!candidate) {
     return (
-      <>
-        <Header />
-        <main className="relative z-10 min-h-screen pt-20 bg-gray-50 flex items-center justify-center">
-          <p>候補者が見つかりません</p>
-        </main>
-        <Footer />
-      </>
+      <div className="flex items-center justify-center py-12">
+        <p className="text-muted-foreground">候補者が見つかりません</p>
+      </div>
     );
   }
 
@@ -126,15 +123,8 @@ export default function CandidateDetailPage() {
   ] as const;
 
   return (
-    <>
-      <Header />
-      <FloatingFlowers />
-
-      <main className="relative z-10 min-h-screen pt-20 bg-gray-50">
-        <section className="px-4 py-8">
-          <div className="max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="mb-6">
+    <div className="max-w-4xl mx-auto">
+      <div className="mb-6">
               <Link
                 href="/admin/candidates"
                 className="inline-flex items-center text-sm text-[var(--muted-foreground)] hover:text-[var(--primary)] mb-4"
@@ -231,6 +221,40 @@ export default function CandidateDetailPage() {
                     </p>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+
+            {/* この候補者で：おすすめ求人・AI履歴書・診断 */}
+            <Card className="border-none shadow-soft mb-6 border-l-4 border-l-[var(--primary)]">
+              <CardContent className="p-6">
+                <h2 className="font-bold text-[var(--foreground)] mb-3">
+                  この候補者で
+                </h2>
+                <p className="text-sm text-[var(--muted-foreground)] mb-4">
+                  おすすめ求人の確認、AI履歴書作成、市場価値診断を候補者を選択した状態で開きます
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <Link
+                    href={`/admin/recommendations?candidateId=${candidateId}`}
+                  >
+                    <Button variant="outline" className="w-full justify-start">
+                      <Sparkles size={16} className="mr-2 text-[var(--primary)]" />
+                      おすすめ求人を見る
+                    </Button>
+                  </Link>
+                  <Link href={`/admin/ai/resume?candidateId=${candidateId}`}>
+                    <Button variant="outline" className="w-full justify-start">
+                      <FileText size={16} className="mr-2 text-[var(--primary)]" />
+                      AI履歴書を作成
+                    </Button>
+                  </Link>
+                  <Link href={`/admin/ai/diagnosis?candidateId=${candidateId}`}>
+                    <Button variant="outline" className="w-full justify-start">
+                      <Award size={16} className="mr-2 text-[var(--primary)]" />
+                      市場価値診断
+                    </Button>
+                  </Link>
+                </div>
               </CardContent>
             </Card>
 
@@ -536,11 +560,6 @@ export default function CandidateDetailPage() {
                 )}
               </CardContent>
             </Card>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </>
+    </div>
   );
 }

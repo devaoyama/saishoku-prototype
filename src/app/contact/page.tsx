@@ -8,6 +8,7 @@ import {
   MessageSquare,
   Phone,
   User,
+  Video,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -40,6 +41,8 @@ function ContactForm() {
     createAccount: true,
   });
 
+  /** 即時面談の接続方法: Zoom または 電話 */
+  const [connectionType, setConnectionType] = useState<"zoom" | "phone">("zoom");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,7 +54,7 @@ function ContactForm() {
 
     // Redirect based on consultation type
     if (consultationType === "instant") {
-      router.push(`/meeting?partner=${partnerId}`);
+      router.push(`/meeting?partner=${partnerId}&type=${connectionType}`);
     } else {
       router.push(
         `/booking/complete?partner=${partnerId}&date=${selectedDate}&time=${selectedTime}`,
@@ -121,6 +124,72 @@ function ContactForm() {
                     </p>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 即時面談の場合: Zoom / 電話 を選択 */}
+          {isInstant && (
+            <Card className="border-none shadow-soft mb-6">
+              <CardContent className="p-6">
+                <Label className="text-base font-medium text-[var(--foreground)] mb-3 block">
+                  接続方法を選択
+                </Label>
+                <p className="text-sm text-[var(--muted-foreground)] mb-4">
+                  面談はZoomまたは電話でご参加いただけます
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setConnectionType("zoom")}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                      connectionType === "zoom"
+                        ? "border-[var(--primary)] bg-[var(--input)]"
+                        : "border-[var(--border)] hover:border-[var(--primary)]/50"
+                    }`}
+                  >
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                        connectionType === "zoom"
+                          ? "bg-[var(--primary)] text-white"
+                          : "bg-[var(--muted)] text-[var(--muted-foreground)]"
+                      }`}
+                    >
+                      <Video size={24} />
+                    </div>
+                    <span className="font-medium text-[var(--foreground)]">
+                      Zoom
+                    </span>
+                    <span className="text-xs text-[var(--muted-foreground)]">
+                      ビデオ・音声で参加
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setConnectionType("phone")}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                      connectionType === "phone"
+                        ? "border-[var(--primary)] bg-[var(--input)]"
+                        : "border-[var(--border)] hover:border-[var(--primary)]/50"
+                    }`}
+                  >
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                        connectionType === "phone"
+                          ? "bg-[var(--primary)] text-white"
+                          : "bg-[var(--muted)] text-[var(--muted-foreground)]"
+                      }`}
+                    >
+                      <Phone size={24} />
+                    </div>
+                    <span className="font-medium text-[var(--foreground)]">
+                      電話
+                    </span>
+                    <span className="text-xs text-[var(--muted-foreground)]">
+                      通話で参加（通話料はお客様負担）
+                    </span>
+                  </button>
+                </div>
               </CardContent>
             </Card>
           )}

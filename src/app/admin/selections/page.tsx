@@ -11,8 +11,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { FloatingFlowers } from "@/components/flower-decoration";
-import { Footer, Header } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -80,15 +78,8 @@ export default function SelectionsPage() {
   const getPartnerById = (id: string) => partners.find((p) => p.id === id);
 
   return (
-    <>
-      <Header />
-      <FloatingFlowers />
-
-      <main className="relative z-10 min-h-screen pt-20 bg-gray-50">
-        <section className="px-4 py-8">
-          <div className="max-w-6xl mx-auto">
-            {/* Header */}
-            <div className="mb-6">
+    <div className="max-w-6xl mx-auto">
+      <div className="mb-6">
               <Link
                 href="/admin"
                 className="inline-flex items-center text-sm text-[var(--muted-foreground)] hover:text-[var(--primary)] mb-4"
@@ -268,11 +259,6 @@ export default function SelectionsPage() {
                 </CardContent>
               </Card>
             )}
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </>
+    </div>
   );
 }

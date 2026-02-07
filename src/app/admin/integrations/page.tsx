@@ -13,8 +13,6 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-import { FloatingFlowers } from "@/components/flower-decoration";
-import { Footer, Header } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -48,15 +46,8 @@ export default function IntegrationsPage() {
   };
 
   return (
-    <>
-      <Header />
-      <FloatingFlowers />
-
-      <main className="relative z-10 min-h-screen pt-20 bg-gray-50">
-        <section className="px-4 py-8">
-          <div className="max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="mb-6">
+    <div className="max-w-4xl mx-auto">
+      <div className="mb-6">
               <Link
                 href="/admin"
                 className="inline-flex items-center text-sm text-[var(--muted-foreground)] hover:text-[var(--primary)] mb-4"
@@ -392,11 +383,6 @@ export default function IntegrationsPage() {
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </>
+    </div>
   );
 }

@@ -12,8 +12,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { FloatingFlowers } from "@/components/flower-decoration";
-import { Footer, Header } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -74,38 +72,28 @@ export default function CandidatesPage() {
   };
 
   return (
-    <>
-      <Header />
-      <FloatingFlowers />
+    <div className="max-w-6xl mx-auto">
+      <div className="mb-6">
+        <Link
+          href="/admin"
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4"
+        >
+          <ArrowLeft size={16} className="mr-1" />
+          運営ダッシュボードに戻る
+        </Link>
+        <h1 className="text-2xl font-bold text-foreground">候補者管理</h1>
+        <p className="text-muted-foreground">
+          候補者の一覧・詳細・タグ編集を行います
+        </p>
+      </div>
 
-      <main className="relative z-10 min-h-screen pt-20 bg-gray-50">
-        <section className="px-4 py-8">
-          <div className="max-w-6xl mx-auto">
-            {/* Header */}
-            <div className="mb-6">
-              <Link
-                href="/admin"
-                className="inline-flex items-center text-sm text-[var(--muted-foreground)] hover:text-[var(--primary)] mb-4"
-              >
-                <ArrowLeft size={16} className="mr-1" />
-                運営ダッシュボードに戻る
-              </Link>
-              <h1 className="text-2xl font-bold text-[var(--foreground)]">
-                候補者管理
-              </h1>
-              <p className="text-[var(--muted-foreground)]">
-                候補者の一覧・詳細・タグ編集を行います
-              </p>
-            </div>
-
-            {/* Filters */}
-            <Card className="border-none shadow-soft mb-6">
+      <Card className="border border-border bg-card shadow-sm mb-6">
               <CardContent className="p-4">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex-1 relative">
                     <Search
                       size={18}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)]"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                     />
                     <Input
                       placeholder="名前・メール・会社名で検索..."
@@ -145,32 +133,28 @@ export default function CandidatesPage() {
             </Card>
 
             {/* Results Count */}
-            <div className="mb-4 flex items-center justify-between">
-              <p className="text-sm text-[var(--muted-foreground)]">
-                {filteredCandidates.length}件の候補者
-              </p>
-            </div>
+      <div className="mb-4 flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          {filteredCandidates.length}件の候補者
+        </p>
+      </div>
 
-            {/* Candidates List */}
-            <div className="space-y-4">
-              {filteredCandidates.map((candidate) => (
-                <Link
-                  key={candidate.id}
-                  href={`/admin/candidates/${candidate.id}`}
-                >
-                  <Card className="border-none shadow-soft card-hover">
+      <div className="space-y-4">
+        {filteredCandidates.map((candidate) => (
+          <Link
+            key={candidate.id}
+            href={`/admin/candidates/${candidate.id}`}
+          >
+            <Card className="border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between">
                         <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 rounded-full bg-[var(--input)] flex items-center justify-center">
-                            <User
-                              size={24}
-                              className="text-[var(--muted-foreground)]"
-                            />
+                          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                            <User size={24} className="text-muted-foreground" />
                           </div>
                           <div>
                             <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-bold text-[var(--foreground)]">
+                              <h3 className="font-bold text-foreground">
                                 {candidate.name}
                               </h3>
                               <Badge
@@ -179,10 +163,10 @@ export default function CandidatesPage() {
                                 {statusLabels[candidate.status]}
                               </Badge>
                             </div>
-                            <p className="text-sm text-[var(--muted-foreground)] mb-2">
+                            <p className="text-sm text-muted-foreground mb-2">
                               {candidate.currentCompany} / {candidate.currentPosition}（{candidate.age}歳）
                             </p>
-                            <div className="flex items-center gap-4 text-xs text-[var(--muted-foreground)]">
+                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
                               <span className="flex items-center gap-1">
                                 <Mail size={12} />
                                 {candidate.email}
@@ -206,7 +190,7 @@ export default function CandidatesPage() {
                                   </span>
                                 ))}
                               {candidate.tagIds.length > 5 && (
-                                <span className="px-2 py-0.5 rounded-full text-xs bg-gray-200 text-gray-600">
+                                <span className="px-2 py-0.5 rounded-full text-xs bg-muted text-muted-foreground">
                                   +{candidate.tagIds.length - 5}
                                 </span>
                               )}
@@ -214,19 +198,16 @@ export default function CandidatesPage() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-xs text-[var(--muted-foreground)] mb-1">
+                          <p className="text-xs text-muted-foreground mb-1">
                             担当: {getPartnerName(candidate.partnerId)}
                           </p>
-                          <p className="text-xs text-[var(--muted-foreground)]">
+                          <p className="text-xs text-muted-foreground">
                             最終連絡:{" "}
                             {format(new Date(candidate.lastContactAt), "M/d", {
                               locale: ja,
                             })}
                           </p>
-                          <ChevronRight
-                            size={20}
-                            className="text-[var(--muted-foreground)] mt-2 ml-auto"
-                          />
+                          <ChevronRight size={20} className="text-muted-foreground mt-2 ml-auto" />
                         </div>
                       </div>
                     </CardContent>
@@ -235,24 +216,16 @@ export default function CandidatesPage() {
               ))}
             </div>
 
-            {filteredCandidates.length === 0 && (
-              <Card className="border-none shadow-soft">
-                <CardContent className="p-8 text-center">
-                  <User
-                    size={48}
-                    className="mx-auto mb-4 text-[var(--muted-foreground)]"
-                  />
-                  <p className="text-[var(--muted-foreground)]">
-                    該当する候補者が見つかりません
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </>
+      {filteredCandidates.length === 0 && (
+        <Card className="border border-border bg-card shadow-sm">
+          <CardContent className="p-8 text-center">
+            <User size={48} className="mx-auto mb-4 text-muted-foreground" />
+            <p className="text-muted-foreground">
+              該当する候補者が見つかりません
+            </p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 }

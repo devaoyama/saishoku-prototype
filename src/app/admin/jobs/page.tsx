@@ -7,13 +7,13 @@ import {
   ChevronRight,
   DollarSign,
   MapPin,
+  Plus,
   Search,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { FloatingFlowers } from "@/components/flower-decoration";
-import { Footer, Header } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -56,29 +56,30 @@ export default function JobsPage() {
   };
 
   return (
-    <>
-      <Header />
-      <FloatingFlowers />
-
-      <main className="relative z-10 min-h-screen pt-20 bg-gray-50">
-        <section className="px-4 py-8">
-          <div className="max-w-6xl mx-auto">
-            {/* Header */}
-            <div className="mb-6">
-              <Link
-                href="/admin"
-                className="inline-flex items-center text-sm text-[var(--muted-foreground)] hover:text-[var(--primary)] mb-4"
-              >
-                <ArrowLeft size={16} className="mr-1" />
-                運営ダッシュボードに戻る
-              </Link>
-              <h1 className="text-2xl font-bold text-[var(--foreground)]">
-                求人管理
-              </h1>
-              <p className="text-[var(--muted-foreground)]">
-                求人の一覧・詳細・タグ編集を行います
-              </p>
-            </div>
+    <div className="max-w-6xl mx-auto">
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <Link
+            href="/admin"
+            className="inline-flex items-center text-sm text-[var(--muted-foreground)] hover:text-[var(--primary)] mb-4"
+          >
+            <ArrowLeft size={16} className="mr-1" />
+            運営ダッシュボードに戻る
+          </Link>
+          <h1 className="text-2xl font-bold text-[var(--foreground)]">
+            求人管理
+          </h1>
+          <p className="text-[var(--muted-foreground)]">
+            求人の一覧・詳細・タグ編集を行います
+          </p>
+        </div>
+        <Button asChild className="shrink-0">
+          <Link href="/admin/jobs/new">
+            <Plus size={16} className="mr-2" />
+            求人を作成
+          </Link>
+        </Button>
+      </div>
 
             {/* Filters */}
             <Card className="border-none shadow-soft mb-6">
@@ -195,11 +196,6 @@ export default function JobsPage() {
                 </CardContent>
               </Card>
             )}
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </>
+    </div>
   );
 }

@@ -74,18 +74,6 @@ export function Header() {
             >
               サービス紹介
             </a>
-            <Link
-              href="/partner/dashboard"
-              className="text-sm font-medium text-[var(--foreground)] hover:text-[var(--primary)] transition-colors"
-            >
-              パートナー管理
-            </Link>
-            <Link
-              href="/admin"
-              className="text-sm font-medium text-[var(--foreground)] hover:text-[var(--primary)] transition-colors"
-            >
-              運営管理
-            </Link>
           </nav>
 
           {/* CTA Buttons */}
@@ -144,20 +132,6 @@ export function Header() {
             >
               サービス紹介
             </a>
-            <Link
-              href="/partner/dashboard"
-              className="block text-sm font-medium text-[var(--foreground)] hover:text-[var(--primary)] transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              パートナー管理
-            </Link>
-            <Link
-              href="/admin"
-              className="block text-sm font-medium text-[var(--foreground)] hover:text-[var(--primary)] transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              運営管理
-            </Link>
             <div className="pt-3 border-t border-[var(--border)] space-y-2">
               <Link href="/login" className="block">
                 <Button

@@ -16,8 +16,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { FloatingFlowers } from "@/components/flower-decoration";
-import { Footer, Header } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -97,11 +95,9 @@ export default function SelectionDetailPage() {
   if (!selection) {
     return (
       <>
-        <Header />
-        <main className="relative z-10 min-h-screen pt-20 bg-gray-50 flex items-center justify-center">
-          <p>選考が見つかりません</p>
-        </main>
-        <Footer />
+        <div className="flex items-center justify-center py-12">
+          <p className="text-muted-foreground">選考が見つかりません</p>
+        </div>
       </>
     );
   }
@@ -134,15 +130,8 @@ export default function SelectionDetailPage() {
   };
 
   return (
-    <>
-      <Header />
-      <FloatingFlowers />
-
-      <main className="relative z-10 min-h-screen pt-20 bg-gray-50">
-        <section className="px-4 py-8">
-          <div className="max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="mb-6">
+    <div className="max-w-4xl mx-auto">
+      <div className="mb-6">
               <Link
                 href="/admin/selections"
                 className="inline-flex items-center text-sm text-[var(--muted-foreground)] hover:text-[var(--primary)] mb-4"
@@ -512,11 +501,6 @@ export default function SelectionDetailPage() {
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </>
+    </div>
   );
 }
