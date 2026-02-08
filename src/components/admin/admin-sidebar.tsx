@@ -2,7 +2,6 @@
 
 import {
   BarChart3,
-  Calendar,
   FileText,
   LayoutDashboard,
   Link2,
@@ -26,7 +25,6 @@ import {
 
 const navItems = [
   { title: "パートナーダッシュボード", href: "/admin/dashboard", icon: LayoutDashboard },
-  { title: "予約枠管理", href: "/admin/slots", icon: Calendar },
 ];
 
 const crmItems = [
@@ -57,7 +55,7 @@ export function AdminSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>パートナー・予約</SidebarGroupLabel>
+          <SidebarGroupLabel>パートナー</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (

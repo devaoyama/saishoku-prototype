@@ -256,7 +256,7 @@ export default function AdminPartnerDashboardPage() {
             </CardContent>
           </Card>
         </Link>
-        <Link href={`/partners/${mockPartner.id}`}>
+        <Link href="/admin/profile">
           <Card className="border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
@@ -265,7 +265,7 @@ export default function AdminPartnerDashboardPage() {
                     <Users size={18} className="text-slate-600" />
                   </div>
                   <span className="font-medium text-foreground">
-                    公開プロフィールを確認
+                    プロフィールを編集
                   </span>
                 </div>
                 <ChevronRight size={20} className="text-muted-foreground" />
