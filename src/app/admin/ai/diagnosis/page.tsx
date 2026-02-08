@@ -37,7 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { candidates, tags } from "@/lib/mock-data";
+import { candidates, savedDiagnoses, tags } from "@/lib/mock-data";
 
 type DiagnosisResult = {
   overallScore: number;
@@ -154,25 +154,44 @@ function DiagnosisContent() {
     }, 400);
   };
 
+  const saveResultAndComplete = () => {
+    if (result) {
+      savedDiagnoses.push({
+        id: `diagnosis-${Date.now()}`,
+        createdAt: new Date().toISOString().slice(0, 10),
+        candidateId: selectedCandidateId || undefined,
+        candidateName: selectedCandidate?.name,
+        overallScore: result.overallScore,
+        rank: result.rank,
+        dimensions: [...result.dimensions],
+        strengths: [...result.strengths],
+        improvements: [...result.improvements],
+        marketValue: { ...result.marketValue },
+        recommendations: [...result.recommendations],
+      });
+    }
+    setCurrentStep("complete");
+  };
+
   const handleDownload = () => {
     toast.success("診断結果をダウンロードしました");
-    setCurrentStep("complete");
+    saveResultAndComplete();
   };
 
   const handleShare = () => {
     toast.success("LINEで診断結果を共有しました");
-    setCurrentStep("complete");
+    saveResultAndComplete();
   };
 
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
         <Link
-          href="/admin"
+          href="/admin/dashboard"
           className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4"
         >
           <ArrowLeft size={16} className="mr-1" />
-          管理画面に戻る
+          パートナーダッシュボードに戻る
         </Link>
         <div className="flex items-center gap-2 mb-2">
           <Award size={24} className="text-slate-600" />
@@ -181,7 +200,7 @@ function DiagnosisContent() {
           </h1>
         </div>
         <p className="text-muted-foreground">
-          動画・音声をアップロードするとAIが内容を解析し、診断結果を自動表示。確認のうえで結果を出力できます
+          分析をAIで行い、決まった項目を自動フォーム入力。運営が手直しして最終成果物をアウトプットします。一度作成したものは保存されます
         </p>
       </div>
 

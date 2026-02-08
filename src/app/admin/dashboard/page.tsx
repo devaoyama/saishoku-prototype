@@ -256,23 +256,6 @@ export default function AdminPartnerDashboardPage() {
             </CardContent>
           </Card>
         </Link>
-        <Link href="/admin/recommendations">
-          <Card className="border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
-                    <Sparkles size={18} className="text-slate-600" />
-                  </div>
-                  <span className="font-medium text-foreground">
-                    おすすめ求人を確認
-                  </span>
-                </div>
-                <ChevronRight size={20} className="text-muted-foreground" />
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
         <Link href={`/partners/${mockPartner.id}`}>
           <Card className="border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-4">

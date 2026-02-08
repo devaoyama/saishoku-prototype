@@ -165,28 +165,21 @@ export function PartnerCard({ partner, variant = "default" }: PartnerCardProps) 
           </div>
         </button>
 
-        {/* 今すぐ話す・予約ボタン（クリックで各フローへ） */}
+        {/* 今すぐ話す（今すぐ話せる場合のみ）・予約ボタン */}
         <div className="px-4 pb-4 flex gap-2">
-          <Link href={`/contact?partner=${partner.id}&type=instant`} className="flex-1">
-            <Button
-              className="w-full rounded-full text-sm"
-              variant={isAvailable ? "default" : "outline"}
-              size="sm"
-            >
-              {isAvailable ? (
-                <>
-                  今すぐ話す
-                  <ArrowRight size={16} className="ml-1" />
-                </>
-              ) : (
-                "今すぐ話す"
-              )}
-            </Button>
-          </Link>
-          <Link href={`/booking?partner=${partner.id}`} className="flex-1">
+          {isAvailable && (
+            <Link href={`/contact?partner=${partner.id}&type=instant`} className="flex-1">
+              <Button className="w-full rounded-full text-sm" size="sm">
+                今すぐ話す
+                <ArrowRight size={16} className="ml-1" />
+              </Button>
+            </Link>
+          )}
+          <Link href={`/booking?partner=${partner.id}`} className={isAvailable ? "flex-1" : "flex-1"}>
             <Button
               variant="outline"
               className="w-full border-[var(--primary)] text-[var(--primary)] rounded-full text-sm"
+              size="sm"
             >
               予約
             </Button>

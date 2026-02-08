@@ -610,3 +610,34 @@ export const bookingSlots = [
   { date: "2026-02-23", times: ["09:00", "11:00", "15:00", "16:00"] },
   { date: "2026-02-24", times: ["10:00", "11:00", "14:00"] },
 ];
+
+// ============================================
+// 保存されたAI成果物（運営が作成・手直し後に保存）
+// ============================================
+export type SavedResume = {
+  id: string;
+  createdAt: string;
+  candidateId?: string;
+  candidateName?: string;
+  summary: string;
+  strengths: string[];
+  experience: string;
+  skills: string[];
+};
+
+export type SavedDiagnosis = {
+  id: string;
+  createdAt: string;
+  candidateId?: string;
+  candidateName?: string;
+  overallScore: number;
+  rank: string;
+  dimensions: { name: string; score: number; fullMark: number }[];
+  strengths: string[];
+  improvements: string[];
+  marketValue: { min: number; max: number; average: number };
+  recommendations: string[];
+};
+
+export const savedResumes: SavedResume[] = [];
+export const savedDiagnoses: SavedDiagnosis[] = [];

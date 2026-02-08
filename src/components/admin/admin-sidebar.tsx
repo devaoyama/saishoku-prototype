@@ -2,15 +2,11 @@
 
 import {
   BarChart3,
-  Briefcase,
   Calendar,
   FileText,
-  Home,
   LayoutDashboard,
   Link2,
-  Sparkles,
   Tag,
-  UserCheck,
   Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -29,16 +25,12 @@ import {
 } from "@/components/ui/sidebar";
 
 const navItems = [
-  { title: "運営ダッシュボード", href: "/admin", icon: Home },
   { title: "パートナーダッシュボード", href: "/admin/dashboard", icon: LayoutDashboard },
   { title: "予約枠管理", href: "/admin/slots", icon: Calendar },
-  { title: "おすすめ求人", href: "/admin/recommendations", icon: Sparkles },
 ];
 
 const crmItems = [
   { title: "候補者一覧", href: "/admin/candidates", icon: Users },
-  { title: "求人一覧", href: "/admin/jobs", icon: Briefcase },
-  { title: "選考管理", href: "/admin/selections", icon: UserCheck },
 ];
 
 const systemItems = [
@@ -54,7 +46,7 @@ export function AdminSidebar() {
   return (
     <Sidebar className="admin-sidebar border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border">
-        <Link href="/admin" className="flex items-center gap-2 px-2 py-3">
+        <Link href="/admin/dashboard" className="flex items-center gap-2 px-2 py-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-600">
             <span className="text-sm font-bold text-white">才</span>
           </div>

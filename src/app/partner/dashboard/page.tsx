@@ -303,29 +303,6 @@ export default function PartnerDashboard() {
                   </CardContent>
                 </Card>
               </Link>
-              <Link href="/partner/recommendations">
-                <Card className="border-none shadow-soft card-hover">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-[var(--input)] flex items-center justify-center">
-                          <Sparkles
-                            size={18}
-                            className="text-[var(--primary)]"
-                          />
-                        </div>
-                        <span className="font-medium text-[var(--foreground)]">
-                          おすすめ求人を確認
-                        </span>
-                      </div>
-                      <ChevronRight
-                        size={20}
-                        className="text-[var(--muted-foreground)]"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
               <Link href={`/partners/${mockPartner.id}`}>
                 <Card className="border-none shadow-soft card-hover">
                   <CardContent className="p-4">

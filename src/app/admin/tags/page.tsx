@@ -100,11 +100,11 @@ export default function TagsPage() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
               <Link
-                href="/admin"
+                href="/admin/dashboard"
                 className="inline-flex items-center text-sm text-[var(--muted-foreground)] hover:text-[var(--primary)] mb-4"
               >
                 <ArrowLeft size={16} className="mr-1" />
-                運営ダッシュボードに戻る
+                パートナーダッシュボードに戻る
               </Link>
               <div className="flex items-center justify-between">
                 <div>
@@ -112,7 +112,7 @@ export default function TagsPage() {
                     タグマスタ管理
                   </h1>
                   <p className="text-[var(--muted-foreground)]">
-                    候補者・求人に使用するタグを管理します
+                    候補者に使用するタグを管理します
                   </p>
                 </div>
                 <Dialog

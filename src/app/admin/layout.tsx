@@ -22,7 +22,7 @@ export default function AdminLayout({
             </Link>
             <div className="ml-auto">
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/admin">ダッシュボード</Link>
+                <Link href="/admin/dashboard">ダッシュボード</Link>
               </Button>
             </div>
           </header>

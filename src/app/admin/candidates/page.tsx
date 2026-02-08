@@ -75,11 +75,11 @@ export default function CandidatesPage() {
     <div className="max-w-6xl mx-auto">
       <div className="mb-6">
         <Link
-          href="/admin"
+          href="/admin/dashboard"
           className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4"
         >
           <ArrowLeft size={16} className="mr-1" />
-          運営ダッシュボードに戻る
+          パートナーダッシュボードに戻る
         </Link>
         <h1 className="text-2xl font-bold text-foreground">候補者管理</h1>
         <p className="text-muted-foreground">

@@ -5,7 +5,6 @@ import { ja } from "date-fns/locale";
 import {
   ArrowLeft,
   Award,
-  Briefcase,
   Calendar,
   ChevronRight,
   Clock,
@@ -16,7 +15,6 @@ import {
   MessageSquare,
   Phone,
   Plus,
-  Sparkles,
   Tag,
   User,
 } from "lucide-react";
@@ -39,10 +37,8 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   type Candidate,
   candidates,
-  jobs,
   meetingLogs,
   partners,
-  selections,
   tags,
 } from "@/lib/mock-data";
 
@@ -83,14 +79,9 @@ export default function CandidateDetailPage() {
 
   const partner = partners.find((p) => p.id === candidate.partnerId);
   const candidateTags = tags.filter((t) => selectedTags.includes(t.id));
-  const candidateSelections = selections.filter(
-    (s) => s.candidateId === candidateId
-  );
   const candidateMeetingLogs = meetingLogs.filter(
     (m) => m.candidateId === candidateId
   );
-
-  const getJobById = (jobId: string) => jobs.find((j) => j.id === jobId);
 
   const toggleTag = (tagId: string) => {
     setSelectedTags((prev) =>
@@ -224,24 +215,16 @@ export default function CandidateDetailPage() {
               </CardContent>
             </Card>
 
-            {/* この候補者で：おすすめ求人・AI履歴書・診断 */}
+            {/* この候補者で：AI履歴書・診断 */}
             <Card className="border-none shadow-soft mb-6 border-l-4 border-l-[var(--primary)]">
               <CardContent className="p-6">
                 <h2 className="font-bold text-[var(--foreground)] mb-3">
                   この候補者で
                 </h2>
                 <p className="text-sm text-[var(--muted-foreground)] mb-4">
-                  おすすめ求人の確認、AI履歴書作成、市場価値診断を候補者を選択した状態で開きます
+                  AI履歴書作成・市場価値診断を候補者を選択した状態で開きます
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <Link
-                    href={`/admin/recommendations?candidateId=${candidateId}`}
-                  >
-                    <Button variant="outline" className="w-full justify-start">
-                      <Sparkles size={16} className="mr-2 text-[var(--primary)]" />
-                      おすすめ求人を見る
-                    </Button>
-                  </Link>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Link href={`/admin/ai/resume?candidateId=${candidateId}`}>
                     <Button variant="outline" className="w-full justify-start">
                       <FileText size={16} className="mr-2 text-[var(--primary)]" />
@@ -344,76 +327,6 @@ export default function CandidateDetailPage() {
                     </p>
                   )}
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Selections Card */}
-            <Card className="border-none shadow-soft mb-6">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <Briefcase size={20} className="text-[var(--secondary)]" />
-                    <h2 className="font-bold text-[var(--foreground)]">
-                      選考状況
-                    </h2>
-                    <Badge className="bg-[var(--input)] text-[var(--foreground)]">
-                      {candidateSelections.length}件
-                    </Badge>
-                  </div>
-                  <Link href={`/admin/selections?candidateId=${candidateId}`}>
-                    <Button variant="outline" size="sm">
-                      すべて見る
-                      <ChevronRight size={16} className="ml-1" />
-                    </Button>
-                  </Link>
-                </div>
-
-                {candidateSelections.length > 0 ? (
-                  <div className="space-y-3">
-                    {candidateSelections.map((selection) => {
-                      const job = getJobById(selection.jobId);
-                      return (
-                        <Link
-                          key={selection.id}
-                          href={`/admin/selections/${selection.id}`}
-                        >
-                          <div className="p-3 bg-[var(--muted)] rounded-lg hover:bg-[var(--input)] transition-colors">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="font-medium text-[var(--foreground)]">
-                                  {job?.companyName}
-                                </p>
-                                <p className="text-sm text-[var(--muted-foreground)]">
-                                  {job?.title}
-                                </p>
-                              </div>
-                              <div className="text-right">
-                                <Badge className="bg-purple-100 text-purple-700 mb-1">
-                                  マッチ率 {selection.matchRate}%
-                                </Badge>
-                                <p className="text-xs text-[var(--muted-foreground)]">
-                                  {selection.status === "document_screening" &&
-                                    "書類選考中"}
-                                  {selection.status === "first_interview" &&
-                                    "一次面接"}
-                                  {selection.status === "final_interview" &&
-                                    "最終面接"}
-                                  {selection.status === "offer" && "内定"}
-                                  {selection.status === "hired" && "入社決定"}
-                                  {selection.status === "rejected" && "不採用"}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-sm text-[var(--muted-foreground)]">
-                    選考中の求人はありません
-                  </p>
-                )}
               </CardContent>
             </Card>
 

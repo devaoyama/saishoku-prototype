@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { candidates } from "@/lib/mock-data";
+import { candidates, savedResumes } from "@/lib/mock-data";
 
 type Step = "upload" | "processing" | "review" | "complete";
 
@@ -110,7 +110,19 @@ function ResumeContent() {
   };
 
   const handleDownload = () => {
-    toast.success("履歴書をダウンロードしました");
+    const id = `resume-${Date.now()}`;
+    const createdAt = new Date().toISOString().slice(0, 10);
+    savedResumes.push({
+      id,
+      createdAt,
+      candidateId: selectedCandidateId || undefined,
+      candidateName: selectedCandidate?.name,
+      summary: generatedResume.summary,
+      strengths: [...generatedResume.strengths],
+      experience: generatedResume.experience,
+      skills: [...generatedResume.skills],
+    });
+    toast.success("履歴書を保存し、ダウンロードしました");
     setCurrentStep("complete");
   };
 
@@ -126,11 +138,11 @@ function ResumeContent() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
         <Link
-          href="/admin"
+          href="/admin/dashboard"
           className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4"
         >
           <ArrowLeft size={16} className="mr-1" />
-          管理画面に戻る
+          パートナーダッシュボードに戻る
         </Link>
         <div className="flex items-center gap-2 mb-2">
           <Sparkles size={24} className="text-slate-600" />
@@ -139,7 +151,7 @@ function ResumeContent() {
           </h1>
         </div>
         <p className="text-muted-foreground">
-          動画・音声をアップロードするとAIが内容を解析し、フォームを自動入力。確認・手直しのうえで成果物を出力します
+          分析をAIで行い、決まった項目を自動フォーム入力。運営が手直しして最終成果物をアウトプットします。一度作成したものは保存されます
         </p>
       </div>
 
