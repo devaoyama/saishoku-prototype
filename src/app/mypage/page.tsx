@@ -3,11 +3,14 @@
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import {
+  Award,
   Calendar,
   ChevronRight,
   Clock,
+  Download,
   Edit,
   ExternalLink,
+  FileText,
   LogOut,
   Mail,
   Phone,
@@ -16,6 +19,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 import { FloatingFlowers } from "@/components/flower-decoration";
 import { Footer, Header } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
@@ -58,9 +62,23 @@ const mockBookingHistory = [
   },
 ];
 
+// モック: AI履歴書・診断結果（面談後にパートナーから共有された想定）
+const mockResume = {
+  createdAt: "2026-01-15",
+  summary:
+    "営業職として3年の経験を持ち、新規開拓で部門トップの実績。顧客との信頼構築とチーム推進力が強みです。",
+  strengths: ["目標達成力", "コミュニケーション", "粘り強さ", "提案力"],
+};
+const mockDiagnosis = {
+  createdAt: "2026-01-15",
+  overallScore: 78,
+  rank: "A",
+  suitableRoles: ["法人営業", "セールス企画", "カスタマーサクセス"],
+};
+
 export default function MyPage() {
   const [activeTab, setActiveTab] = useState<
-    "upcoming" | "history" | "profile"
+    "upcoming" | "history" | "profile" | "ai"
   >("upcoming");
 
   const upcomingPartner = partners.find(
@@ -90,6 +108,7 @@ export default function MyPage() {
               {[
                 { id: "upcoming", label: "次回の面談", icon: Calendar },
                 { id: "history", label: "予約履歴", icon: Clock },
+                { id: "ai", label: "AI履歴書・診断", icon: FileText },
                 { id: "profile", label: "プロフィール", icon: User },
               ].map((tab) => (
                 <button
@@ -296,6 +315,90 @@ export default function MyPage() {
                     </CardContent>
                   </Card>
                 )}
+              </div>
+            )}
+
+            {activeTab === "ai" && (
+              <div className="space-y-6 animate-fade-in-up">
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  面談後にパートナーから共有されたAI履歴書・人間的市場価値診断の結果を閲覧・ダウンロードできます
+                </p>
+
+                {/* AI履歴書 */}
+                <Card className="border-none shadow-soft">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-bold text-[var(--foreground)] flex items-center gap-2">
+                        <FileText size={20} className="text-[var(--primary)]" />
+                        AI履歴書
+                      </h3>
+                      <span className="text-xs text-[var(--muted-foreground)]">
+                        {mockResume.createdAt} 作成
+                      </span>
+                    </div>
+                    <p className="text-sm text-[var(--muted-foreground)] mb-4">
+                      {mockResume.summary}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {mockResume.strengths.map((s) => (
+                        <Badge
+                          key={s}
+                          variant="secondary"
+                          className="bg-[var(--input)] text-[var(--primary)]"
+                        >
+                          {s}
+                        </Badge>
+                      ))}
+                    </div>
+                    <Button
+                      className="btn-gradient rounded-full"
+                      onClick={() => toast.success("履歴書をダウンロードしました")}
+                    >
+                      <Download size={16} className="mr-2" />
+                      PDFでダウンロード
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* 人間的市場価値診断 */}
+                <Card className="border-none shadow-soft">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-bold text-[var(--foreground)] flex items-center gap-2">
+                        <Award size={20} className="text-[var(--primary)]" />
+                        人間的市場価値診断
+                      </h3>
+                      <span className="text-xs text-[var(--muted-foreground)]">
+                        {mockDiagnosis.createdAt} 診断
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="text-3xl font-bold text-[var(--primary)]">
+                        {mockDiagnosis.overallScore}
+                        <span className="text-lg text-[var(--foreground)]">点</span>
+                      </div>
+                      <Badge className="bg-[var(--primary)] text-white text-base px-3">
+                        {mockDiagnosis.rank}ランク
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-[var(--muted-foreground)] mb-2">
+                      おすすめのキャリア
+                    </p>
+                    <ul className="list-disc list-inside text-sm text-[var(--foreground)] mb-4">
+                      {mockDiagnosis.suitableRoles.map((r) => (
+                        <li key={r}>{r}</li>
+                      ))}
+                    </ul>
+                    <Button
+                      variant="outline"
+                      className="rounded-full border-[var(--primary)] text-[var(--primary)]"
+                      onClick={() => toast.success("診断結果をダウンロードしました")}
+                    >
+                      <Download size={16} className="mr-2" />
+                      診断結果をPDFでダウンロード
+                    </Button>
+                  </CardContent>
+                </Card>
               </div>
             )}
 

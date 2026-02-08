@@ -11,6 +11,7 @@ import {
   Sparkles,
   Star,
   TrendingUp,
+  Upload,
   User,
 } from "lucide-react";
 import Link from "next/link";
@@ -56,11 +57,15 @@ type DiagnosisResult = {
   recommendations: string[];
 };
 
+type Step = "upload" | "processing" | "review" | "complete";
+
 function DiagnosisContent() {
   const searchParams = useSearchParams();
   const candidateIdFromUrl = searchParams.get("candidateId") ?? "";
+  const [currentStep, setCurrentStep] = useState<Step>("upload");
   const [selectedCandidateId, setSelectedCandidateId] =
     useState<string>(candidateIdFromUrl);
+  const [hasUploadedFile, setHasUploadedFile] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<DiagnosisResult | null>(null);
@@ -69,11 +74,24 @@ function DiagnosisContent() {
     (c) => c.id === selectedCandidateId,
   );
 
+  const steps = [
+    { key: "upload" as const, label: "1. アップロード" },
+    { key: "processing" as const, label: "2. 自動診断" },
+    { key: "review" as const, label: "3. 確認" },
+    { key: "complete" as const, label: "4. 出力" },
+  ];
+
+  const handleFileUpload = () => {
+    setHasUploadedFile(true);
+    toast.success("動画・音声をアップロードしました。診断を開始できます");
+  };
+
   const handleStartDiagnosis = () => {
-    if (!selectedCandidateId) {
-      toast.error("候補者を選択してください");
+    if (!hasUploadedFile) {
+      toast.error("動画・音声をアップロードしてください");
       return;
     }
+    setCurrentStep("processing");
     setIsAnalyzing(true);
     setProgress(0);
     setResult(null);
@@ -82,6 +100,7 @@ function DiagnosisContent() {
         if (prev >= 100) {
           clearInterval(interval);
           setIsAnalyzing(false);
+          setCurrentStep("review");
           const candidateTags = tags.filter((t) =>
             selectedCandidate?.tagIds.includes(t.id),
           );
@@ -137,10 +156,12 @@ function DiagnosisContent() {
 
   const handleDownload = () => {
     toast.success("診断結果をダウンロードしました");
+    setCurrentStep("complete");
   };
 
   const handleShare = () => {
     toast.success("LINEで診断結果を共有しました");
+    setCurrentStep("complete");
   };
 
   return (
@@ -160,15 +181,71 @@ function DiagnosisContent() {
           </h1>
         </div>
         <p className="text-muted-foreground">
-          候補者の強みを可視化し、市場価値を診断します
+          動画・音声をアップロードするとAIが内容を解析し、診断結果を自動表示。確認のうえで結果を出力できます
         </p>
       </div>
 
       <Card className="border border-border bg-card shadow-sm mb-6">
-        <CardContent className="p-6">
-          <div className="flex items-end gap-4 flex-wrap">
-            <div className="flex-1 min-w-[200px]">
-              <Label className="mb-2 block">候補者を選択</Label>
+        <CardContent className="p-4">
+          <div className="flex gap-2 flex-wrap">
+            {steps.map(({ key, label }) => (
+              <div
+                key={key}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium ${
+                  currentStep === key
+                    ? "bg-slate-700 text-white"
+                    : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {label}
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {currentStep === "upload" && (
+        <Card className="border border-border bg-card shadow-sm mb-6">
+          <CardContent className="p-6">
+            <h2 className="font-bold text-foreground mb-2">
+              1. 動画または音声をアップロード
+            </h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              面談の録画・録音をアップロードすると、AIが内容を解析して人間的市場価値診断結果を自動表示します
+            </p>
+            <button
+              type="button"
+              className={`w-full border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer mb-6 ${
+                hasUploadedFile
+                  ? "border-green-500 bg-green-50 dark:bg-green-950/20"
+                  : "border-border hover:border-slate-400"
+              }`}
+              onClick={handleFileUpload}
+            >
+              {hasUploadedFile ? (
+                <>
+                  <CheckCircle size={48} className="mx-auto mb-4 text-green-600" />
+                  <p className="text-foreground font-medium mb-1">
+                    ファイルをアップロードしました
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    下のボタンで診断を開始
+                  </p>
+                </>
+              ) : (
+                <>
+                  <Upload size={48} className="mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-foreground font-medium mb-1">
+                    クリックして動画・音声を選択
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    MP3, WAV, MP4, MOV 対応（最大500MB）
+                  </p>
+                </>
+              )}
+            </button>
+            <div className="mb-6">
+              <Label className="mb-2 block">候補者を選択（任意・コンテキスト用）</Label>
               <Select
                 value={selectedCandidateId}
                 onValueChange={setSelectedCandidateId}
@@ -185,40 +262,39 @@ function DiagnosisContent() {
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={handleStartDiagnosis} disabled={isAnalyzing}>
-              {isAnalyzing ? (
-                <>
-                  <Loader2 size={16} className="mr-2 animate-spin" />
-                  診断中...
-                </>
-              ) : (
-                <>
-                  <Sparkles size={16} className="mr-2" />
-                  診断を開始
-                </>
-              )}
+            <Button
+              className="w-full"
+              onClick={handleStartDiagnosis}
+              disabled={!hasUploadedFile}
+            >
+              <Sparkles size={16} className="mr-2" />
+              {hasUploadedFile
+                ? "解析して診断結果を表示"
+                : "アップロード後に診断を開始"}
             </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
-      {isAnalyzing && (
+      {currentStep === "processing" && isAnalyzing && (
         <Card className="border border-border bg-card shadow-sm mb-6">
           <CardContent className="p-8 text-center">
             <Loader2
               size={48}
               className="mx-auto mb-4 text-slate-600 animate-spin"
             />
-            <h3 className="font-bold text-foreground mb-2">AIが診断中...</h3>
+            <h3 className="font-bold text-foreground mb-2">
+              解析中… 診断結果を自動で作成しています
+            </h3>
             <Progress value={progress} className="mb-4 max-w-md mx-auto" />
             <p className="text-sm text-muted-foreground">
-              候補者の情報とタグを分析しています
+              動画・音声の内容を分析し、人間的市場価値を診断しています
             </p>
           </CardContent>
         </Card>
       )}
 
-      {result && !isAnalyzing && (
+      {currentStep === "review" && result && (
         <div className="space-y-6">
           <Card className="border border-border bg-card shadow-sm overflow-hidden">
             <div className="bg-slate-700 p-6 text-white text-center">
@@ -239,7 +315,9 @@ function DiagnosisContent() {
               <div className="flex items-center justify-center gap-2 mb-4">
                 <User size={20} className="text-slate-600" />
                 <span className="font-bold text-foreground">
-                  {selectedCandidate?.name}さんの診断結果
+                  {selectedCandidate
+                    ? `${selectedCandidate.name}さんの診断結果`
+                    : "診断結果"}
                 </span>
               </div>
               <div className="h-80">
@@ -362,12 +440,19 @@ function DiagnosisContent() {
             </CardContent>
           </Card>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-wrap">
             <Button
               variant="outline"
-              className="flex-1"
-              onClick={handleDownload}
+              onClick={() => {
+                setCurrentStep("upload");
+                setResult(null);
+                setHasUploadedFile(false);
+                setProgress(0);
+              }}
             >
+              やり直す
+            </Button>
+            <Button variant="outline" className="flex-1" onClick={handleDownload}>
               <Download size={16} className="mr-2" />
               PDFでダウンロード
             </Button>
@@ -377,6 +462,23 @@ function DiagnosisContent() {
             </Button>
           </div>
         </div>
+      )}
+
+      {currentStep === "complete" && (
+        <Card className="border border-border bg-card shadow-sm">
+          <CardContent className="p-8 text-center">
+            <CheckCircle size={64} className="mx-auto mb-6 text-green-500" />
+            <h2 className="font-bold text-xl text-foreground mb-2">
+              診断結果の出力が完了しました
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              ダウンロードや共有で候補者に結果を伝えられます
+            </p>
+            <Button onClick={() => setCurrentStep("upload")}>
+              新しい診断を行う
+            </Button>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

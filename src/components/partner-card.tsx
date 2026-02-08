@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Video, Mic, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -77,6 +78,7 @@ function ConsultationBadge({ type }: { type: ConsultationType }) {
 }
 
 export function PartnerCard({ partner, variant = "default" }: PartnerCardProps) {
+  const router = useRouter();
   const isAvailable = partner.status === "available";
 
   if (variant === "compact") {
@@ -120,86 +122,75 @@ export function PartnerCard({ partner, variant = "default" }: PartnerCardProps) 
   return (
     <Card className="card-hover border-none shadow-soft overflow-hidden group">
       <CardContent className="p-0">
-        {/* Image Section */}
-        <div className="relative aspect-[4/3] overflow-hidden">
-          <img
-            src={partner.imageUrl}
-            alt={partner.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-          <div className="absolute top-3 left-3">
-            <StatusBadge status={partner.status} />
-          </div>
-          <div className="absolute bottom-3 left-3 right-3">
-            <h3 className="font-bold text-white text-xl mb-1">{partner.name}</h3>
-            <p className="text-white/90 text-sm">{partner.tagline}</p>
-          </div>
-        </div>
-
-        {/* Content Section */}
-        <div className="p-4 space-y-4">
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2">
-            {partner.tags.map((tag) => (
-              <Badge
-                key={tag}
-                variant="secondary"
-                className="bg-[var(--input)] text-[var(--primary)] border-none text-xs"
-              >
-                #{tag}
-              </Badge>
-            ))}
+        {/* カード部分クリックで詳細へ（ボタン以外） */}
+        <button
+          type="button"
+          className="w-full text-left block"
+          onClick={() => router.push(`/partners/${partner.id}`)}
+        >
+          {/* Image Section */}
+          <div className="relative aspect-[4/3] overflow-hidden">
+            <img
+              src={partner.imageUrl}
+              alt={partner.name}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div className="absolute top-3 left-3">
+              <StatusBadge status={partner.status} />
+            </div>
+            <div className="absolute bottom-3 left-3 right-3">
+              <h3 className="font-bold text-white text-xl mb-1">{partner.name}</h3>
+              <p className="text-white/90 text-sm">{partner.tagline}</p>
+            </div>
           </div>
 
-          {/* Consultation Type */}
-          <ConsultationBadge type={partner.consultationType} />
-
-          {/* Bio */}
-          <p className="text-sm text-[var(--muted-foreground)] line-clamp-2">
-            {partner.bio}
-          </p>
-
-          {/* Actions */}
-          <div className="flex gap-2 pt-2">
-            {isAvailable ? (
-              <>
-                <Link href={`/contact?partner=${partner.id}&type=instant`} className="flex-1">
-                  <Button className="w-full btn-gradient rounded-full text-sm">
-                    今すぐ話す
-                    <ArrowRight size={16} className="ml-1" />
-                  </Button>
-                </Link>
-                <Link href={`/partners/${partner.id}`}>
-                  <Button
-                    variant="outline"
-                    className="border-[var(--primary)] text-[var(--primary)] rounded-full"
-                  >
-                    詳細
-                  </Button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link href={`/booking?partner=${partner.id}`} className="flex-1">
-                  <Button
-                    variant="outline"
-                    className="w-full border-[var(--primary)] text-[var(--primary)] rounded-full"
-                  >
-                    予約する
-                  </Button>
-                </Link>
-                <Link href={`/partners/${partner.id}`}>
-                  <Button
-                    variant="outline"
-                    className="border-[var(--border)] text-[var(--muted-foreground)] rounded-full"
-                  >
-                    詳細
-                  </Button>
-                </Link>
-              </>
-            )}
+          {/* Content Section */}
+          <div className="p-4 space-y-4">
+            <div className="flex flex-wrap gap-2">
+              {partner.tags.map((tag) => (
+                <Badge
+                  key={tag}
+                  variant="secondary"
+                  className="bg-[var(--input)] text-[var(--primary)] border-none text-xs"
+                >
+                  #{tag}
+                </Badge>
+              ))}
+            </div>
+            <ConsultationBadge type={partner.consultationType} />
+            <p className="text-sm text-[var(--muted-foreground)] line-clamp-2">
+              {partner.bio}
+            </p>
           </div>
+        </button>
+
+        {/* 今すぐ話す・予約ボタン（クリックで各フローへ） */}
+        <div className="px-4 pb-4 flex gap-2">
+          <Link href={`/contact?partner=${partner.id}&type=instant`} className="flex-1">
+            <Button
+              className="w-full rounded-full text-sm"
+              variant={isAvailable ? "default" : "outline"}
+              size="sm"
+            >
+              {isAvailable ? (
+                <>
+                  今すぐ話す
+                  <ArrowRight size={16} className="ml-1" />
+                </>
+              ) : (
+                "今すぐ話す"
+              )}
+            </Button>
+          </Link>
+          <Link href={`/booking?partner=${partner.id}`} className="flex-1">
+            <Button
+              variant="outline"
+              className="w-full border-[var(--primary)] text-[var(--primary)] rounded-full text-sm"
+            >
+              予約
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>

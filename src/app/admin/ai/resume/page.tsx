@@ -6,7 +6,6 @@ import {
   Download,
   FileText,
   Loader2,
-  Mic,
   RefreshCw,
   Sparkles,
   Upload,
@@ -38,9 +37,10 @@ function ResumeContent() {
   const [currentStep, setCurrentStep] = useState<Step>("upload");
   const [selectedCandidateId, setSelectedCandidateId] =
     useState<string>(candidateIdFromUrl);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [hasUploadedFile, setHasUploadedFile] = useState(false);
   const [manualInput, setManualInput] = useState("");
+  const [showManualInput, setShowManualInput] = useState(false);
 
   const [generatedResume, setGeneratedResume] = useState({
     summary: "",
@@ -54,22 +54,21 @@ function ResumeContent() {
   );
 
   const handleFileUpload = () => {
-    toast.info("音声ファイルがアップロードされました");
+    setHasUploadedFile(true);
+    toast.success("動画・音声をアップロードしました。解析を開始できます");
   };
 
   const handleStartProcessing = () => {
-    if (!selectedCandidateId && !manualInput) {
-      toast.error("候補者を選択するか、面談内容を入力してください");
+    if (!hasUploadedFile && !manualInput.trim()) {
+      toast.error("動画・音声をアップロードするか、手動で面談内容を入力してください");
       return;
     }
-    setIsProcessing(true);
     setCurrentStep("processing");
     setProgress(0);
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          setIsProcessing(false);
           setCurrentStep("review");
           setGeneratedResume({
             summary: `${selectedCandidate?.name || "候補者"}は、${selectedCandidate?.currentCompany || "現職"}で${selectedCandidate?.currentPosition || "営業職"}として活躍。高いコミュニケーション能力と粘り強さを持ち、目標達成に向けて主体的に行動できる人材です。`,
@@ -116,10 +115,10 @@ function ResumeContent() {
   };
 
   const steps = [
-    { key: "upload", label: "1. 入力" },
-    { key: "processing", label: "2. AI処理" },
-    { key: "review", label: "3. 確認・編集" },
-    { key: "complete", label: "4. 完了" },
+    { key: "upload", label: "1. アップロード" },
+    { key: "processing", label: "2. 自動入力" },
+    { key: "review", label: "3. 確認・手直し" },
+    { key: "complete", label: "4. 出力" },
   ];
   const currentStepIndex = steps.findIndex((s) => s.key === currentStep);
 
@@ -140,7 +139,7 @@ function ResumeContent() {
           </h1>
         </div>
         <p className="text-muted-foreground">
-          面談内容からAIが履歴書のドラフトを自動生成します
+          動画・音声をアップロードするとAIが内容を解析し、フォームを自動入力。確認・手直しのうえで成果物を出力します
         </p>
       </div>
 
@@ -187,9 +186,46 @@ function ResumeContent() {
       {currentStep === "upload" && (
         <Card className="border border-border bg-card shadow-sm">
           <CardContent className="p-6">
-            <h2 className="font-bold text-foreground mb-4">入力方法を選択</h2>
+            <h2 className="font-bold text-foreground mb-2">
+              1. 動画または音声をアップロード
+            </h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              面談の録画・録音データをアップロードすると、AIが内容を解析して履歴書フォームを自動入力します
+            </p>
+            <button
+              type="button"
+              className={`w-full border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer mb-6 ${
+                hasUploadedFile
+                  ? "border-green-500 bg-green-50 dark:bg-green-950/20"
+                  : "border-border hover:border-slate-400"
+              }`}
+              onClick={handleFileUpload}
+            >
+              {hasUploadedFile ? (
+                <>
+                  <CheckCircle size={48} className="mx-auto mb-4 text-green-600" />
+                  <p className="text-foreground font-medium mb-1">
+                    ファイルをアップロードしました
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    下のボタンで解析・自動入力を開始
+                  </p>
+                </>
+              ) : (
+                <>
+                  <Upload size={48} className="mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-foreground font-medium mb-1">
+                    クリックして動画・音声を選択
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    MP3, WAV, MP4, MOV 対応（最大500MB）
+                  </p>
+                </>
+              )}
+            </button>
+
             <div className="mb-6">
-              <Label className="mb-2 block">候補者を選択（任意）</Label>
+              <Label className="mb-2 block">候補者を選択（任意・コンテキスト用）</Label>
               <Select
                 value={selectedCandidateId}
                 onValueChange={setSelectedCandidateId}
@@ -206,39 +242,36 @@ function ResumeContent() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="mb-6">
-              <Label className="mb-2 block">音声/動画ファイルをアップロード</Label>
-              <div
-                className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-slate-400 transition-colors cursor-pointer"
-                onClick={handleFileUpload}
-              >
-                <Upload size={48} className="mx-auto mb-4 text-muted-foreground" />
-                <p className="text-foreground font-medium mb-1">
-                  クリックしてファイルを選択
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  MP3, WAV, MP4, MOV 対応（最大500MB）
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex-1 h-px bg-border" />
-              <span className="text-sm text-muted-foreground">または</span>
-              <div className="flex-1 h-px bg-border" />
-            </div>
-            <div className="mb-6">
-              <Label className="mb-2 block">面談内容を手動入力</Label>
-              <Textarea
-                value={manualInput}
-                onChange={(e) => setManualInput(e.target.value)}
-                placeholder="面談で話した内容、候補者の強み、経歴などを入力してください..."
-                rows={6}
-              />
-            </div>
-            <Button className="w-full" onClick={handleStartProcessing}>
+
+            <Button
+              className="w-full"
+              onClick={handleStartProcessing}
+              disabled={!hasUploadedFile && !manualInput.trim()}
+            >
               <Sparkles size={16} className="mr-2" />
-              AIで履歴書を生成
+              {hasUploadedFile
+                ? "解析してフォームを自動入力"
+                : "アップロード後に解析を開始"}
             </Button>
+
+            <button
+              type="button"
+              className="mt-4 text-sm text-muted-foreground hover:text-foreground underline"
+              onClick={() => setShowManualInput(!showManualInput)}
+            >
+              {showManualInput ? "手動入力を閉じる" : "音声がない場合：手動で入力する"}
+            </button>
+            {showManualInput && (
+              <div className="mt-4 p-4 border border-border rounded-lg">
+                <Label className="mb-2 block">面談内容を手動入力</Label>
+                <Textarea
+                  value={manualInput}
+                  onChange={(e) => setManualInput(e.target.value)}
+                  placeholder="面談で話した内容、候補者の強み、経歴などを入力..."
+                  rows={4}
+                />
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -248,10 +281,10 @@ function ResumeContent() {
           <CardContent className="p-8 text-center">
             <Loader2 size={64} className="mx-auto mb-6 text-slate-600 animate-spin" />
             <h2 className="font-bold text-xl text-foreground mb-2">
-              AIが履歴書を生成中...
+              解析中… フォームを自動入力しています
             </h2>
             <p className="text-muted-foreground mb-6">
-              面談内容を分析し、強みを抽出しています
+              動画・音声の内容を分析し、履歴書項目を抽出しています
             </p>
             <Progress value={progress} className="mb-4" />
             <div className="space-y-2 text-sm text-muted-foreground">
@@ -283,10 +316,12 @@ function ResumeContent() {
           <Card className="border border-border bg-card shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-foreground">生成された履歴書</h2>
+                <h2 className="font-bold text-foreground">
+                  2. 自動入力された内容を確認・手直し
+                </h2>
                 <Button variant="outline" size="sm" onClick={handleRegenerate}>
                   <RefreshCw size={14} className="mr-1" />
-                  再生成
+                  再解析
                 </Button>
               </div>
               <div className="mb-6">

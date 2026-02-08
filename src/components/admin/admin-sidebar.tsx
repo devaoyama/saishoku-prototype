@@ -45,7 +45,6 @@ const systemItems = [
   { title: "タグマスタ", href: "/admin/tags", icon: Tag },
   { title: "AI履歴書作成", href: "/admin/ai/resume", icon: FileText },
   { title: "市場価値診断", href: "/admin/ai/diagnosis", icon: BarChart3 },
-  { title: "CV計測・分析", href: "/admin/analytics", icon: BarChart3 },
   { title: "外部連携", href: "/admin/integrations", icon: Link2 },
 ];
 

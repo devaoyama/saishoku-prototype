@@ -80,16 +80,8 @@ export default function AdminDashboard() {
       bgColor: "bg-orange-50",
     },
     {
-      title: "CV計測・分析",
-      description: "経路別CV計測・ファネル分析",
-      icon: BarChart3,
-      href: "/admin/analytics",
-      color: "text-pink-500",
-      bgColor: "bg-pink-50",
-    },
-    {
-      title: "外部連携設定",
-      description: "LINE・Slack連携の設定",
+      title: "外部連携",
+      description: "各アカウントのGoogleカレンダーAPI登録",
       icon: Link2,
       href: "/admin/integrations",
       color: "text-cyan-500",
@@ -107,7 +99,7 @@ export default function AdminDashboard() {
           </h1>
         </div>
         <p className="text-muted-foreground">
-          CRM・選考管理・分析・AI機能など、運営に必要な機能にアクセスできます
+          CRM・選考管理・AI機能・外部連携など、運営に必要な機能にアクセスできます
         </p>
       </div>
 

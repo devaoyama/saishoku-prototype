@@ -17,7 +17,6 @@ import { FloatingFlowers } from "@/components/flower-decoration";
 import { Footer, Header } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,7 +37,6 @@ function ContactForm() {
     email: "",
     phone: "",
     topic: "",
-    createAccount: true,
   });
 
   /** 即時面談の接続方法: Zoom または 電話 */
@@ -239,9 +237,6 @@ function ContactForm() {
                     }
                     className="border-[var(--border)] focus:border-[var(--primary)] focus:ring-[var(--primary)]"
                   />
-                  <p className="text-xs text-[var(--muted-foreground)]">
-                    Zoom URLの送信に使用します
-                  </p>
                 </div>
 
                 {/* Phone */}
@@ -290,32 +285,6 @@ function ContactForm() {
                   <p className="text-xs text-[var(--muted-foreground)]">
                     事前に共有いただくとスムーズにお話しできます
                   </p>
-                </div>
-
-                {/* Create Account Checkbox */}
-                <div className="flex items-start space-x-3 p-4 bg-[var(--muted)] rounded-lg">
-                  <Checkbox
-                    id="createAccount"
-                    checked={formData.createAccount}
-                    onCheckedChange={(checked) =>
-                      setFormData({
-                        ...formData,
-                        createAccount: checked as boolean,
-                      })
-                    }
-                    className="mt-0.5 border-[var(--primary)] data-[state=checked]:bg-[var(--primary)]"
-                  />
-                  <div className="space-y-1">
-                    <Label
-                      htmlFor="createAccount"
-                      className="text-sm font-medium cursor-pointer"
-                    >
-                      入力したメールアドレスでアカウントを作成する
-                    </Label>
-                    <p className="text-xs text-[var(--muted-foreground)]">
-                      次回以降、情報の入力を省略できます。アカウント作成は無料です。
-                    </p>
-                  </div>
                 </div>
 
                 {/* Submit Button */}
