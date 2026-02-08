@@ -9,6 +9,7 @@ import {
   Copy,
   ExternalLink,
   Mail,
+  Phone,
   User,
   Video,
 } from "lucide-react";
@@ -27,11 +28,11 @@ function BookingCompleteContent() {
   const partnerId = searchParams.get("partner");
   const dateStr = searchParams.get("date");
   const time = searchParams.get("time");
+  const method = (searchParams.get("method") === "phone" ? "phone" : "zoom") as "zoom" | "phone";
 
   const partner = partners.find((p) => p.id === partnerId);
   const date = dateStr ? parseISO(dateStr) : null;
 
-  // Mock Zoom URL
   const zoomUrl = "https://zoom.us/j/1234567890?pwd=example";
 
   const handleCopyUrl = () => {
@@ -103,34 +104,52 @@ function BookingCompleteContent() {
                 </div>
               </div>
 
-              {/* Zoom URL */}
-              <div className="p-4 bg-[var(--muted)] rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Video size={18} className="text-[var(--secondary)]" />
-                  <p className="font-medium text-[var(--foreground)]">
-                    Zoom参加URL
+              {/* Zoom または 電話（選択した方法のみ表示・切り替え不可） */}
+              {method === "zoom" && (
+                <div className="p-4 bg-[var(--muted)] rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Video size={18} className="text-[var(--secondary)]" />
+                    <p className="font-medium text-[var(--foreground)]">
+                      Zoom参加URL
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={zoomUrl}
+                      readOnly
+                      className="flex-1 bg-white border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--muted-foreground)] truncate"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCopyUrl}
+                      className="shrink-0"
+                    >
+                      <Copy size={16} />
+                    </Button>
+                  </div>
+                  <p className="text-xs text-[var(--muted-foreground)] mt-2">
+                    ※ 当日はこのURLからZoomミーティングに参加してください
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={zoomUrl}
-                    readOnly
-                    className="flex-1 bg-white border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--muted-foreground)] truncate"
-                  />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleCopyUrl}
-                    className="shrink-0"
-                  >
-                    <Copy size={16} />
-                  </Button>
+              )}
+              {method === "phone" && (
+                <div className="p-4 bg-[var(--muted)] rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Phone size={18} className="text-[var(--secondary)]" />
+                    <p className="font-medium text-[var(--foreground)]">
+                      電話で面談
+                    </p>
+                  </div>
+                  <p className="text-sm text-[var(--foreground)]">
+                    予約日時にパートナーからお電話します。登録の電話番号へかけますので、お待ちください。
+                  </p>
+                  <p className="text-xs text-[var(--muted-foreground)] mt-2">
+                    ※ 通話料はお客様負担です
+                  </p>
                 </div>
-                <p className="text-xs text-[var(--muted-foreground)] mt-2">
-                  ※ 当日はこのURLからZoomミーティングに参加してください
-                </p>
-              </div>
+              )}
             </CardContent>
           </Card>
 
@@ -146,7 +165,9 @@ function BookingCompleteContent() {
                     確認メールをお送りしました
                   </h3>
                   <p className="text-sm text-[var(--muted-foreground)]">
-                    予約の詳細とZoom URLを記載したメールをお送りしました。
+                    {method === "zoom"
+                      ? "予約の詳細とZoom URLを記載したメールをお送りしました。"
+                      : "予約の詳細を記載したメールをお送りしました。"}
                     メールが届かない場合は迷惑メールフォルダをご確認ください。
                   </p>
                 </div>
@@ -154,27 +175,29 @@ function BookingCompleteContent() {
             </CardContent>
           </Card>
 
-          {/* Tips */}
+          {/* Tips（Zoom のときのみ Zoom 準備を表示） */}
           <Card className="border-none shadow-soft mb-6 animate-fade-in-up stagger-3">
             <CardContent className="p-6">
               <h3 className="font-bold text-[var(--foreground)] mb-4">
                 当日までの準備
               </h3>
               <ul className="space-y-3">
-                <li className="flex items-start gap-3">
-                  <CheckCircle2
-                    size={18}
-                    className="text-green-500 mt-0.5 shrink-0"
-                  />
-                  <div>
-                    <p className="font-medium text-[var(--foreground)]">
-                      Zoomのインストール
-                    </p>
-                    <p className="text-sm text-[var(--muted-foreground)]">
-                      スムーズに参加するため、事前にZoomアプリのインストールをおすすめします
-                    </p>
-                  </div>
-                </li>
+                {method === "zoom" && (
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2
+                      size={18}
+                      className="text-green-500 mt-0.5 shrink-0"
+                    />
+                    <div>
+                      <p className="font-medium text-[var(--foreground)]">
+                        Zoomのインストール
+                      </p>
+                      <p className="text-sm text-[var(--muted-foreground)]">
+                        スムーズに参加するため、事前にZoomアプリのインストールをおすすめします
+                      </p>
+                    </div>
+                  </li>
+                )}
                 <li className="flex items-start gap-3">
                   <CheckCircle2
                     size={18}
@@ -189,39 +212,43 @@ function BookingCompleteContent() {
                     </p>
                   </div>
                 </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2
-                    size={18}
-                    className="text-green-500 mt-0.5 shrink-0"
-                  />
-                  <div>
-                    <p className="font-medium text-[var(--foreground)]">
-                      顔出しは任意です
-                    </p>
-                    <p className="text-sm text-[var(--muted-foreground)]">
-                      音声のみでの参加もOKです。リラックスしてご参加ください
-                    </p>
-                  </div>
-                </li>
+                {method === "zoom" && (
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2
+                      size={18}
+                      className="text-green-500 mt-0.5 shrink-0"
+                    />
+                    <div>
+                      <p className="font-medium text-[var(--foreground)]">
+                        顔出しは任意です
+                      </p>
+                      <p className="text-sm text-[var(--muted-foreground)]">
+                        音声のみでの参加もOKです。リラックスしてご参加ください
+                      </p>
+                    </div>
+                  </li>
+                )}
               </ul>
             </CardContent>
           </Card>
 
-          {/* Action Buttons */}
+          {/* Action Buttons（Zoom のときのみ Zoomを開く、電話のときはマイページのみ） */}
           <div className="flex flex-col sm:flex-row gap-3 animate-fade-in-up stagger-4">
-            <a
-              href={zoomUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1"
-            >
-              <Button className="w-full btn-gradient rounded-full py-6 text-lg">
-                <Video size={20} className="mr-2" />
-                Zoomを開く
-                <ExternalLink size={18} className="ml-2" />
-              </Button>
-            </a>
-            <Link href="/mypage" className="flex-1">
+            {method === "zoom" && (
+              <a
+                href={zoomUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1"
+              >
+                <Button className="w-full btn-gradient rounded-full py-6 text-lg">
+                  <Video size={20} className="mr-2" />
+                  Zoomを開く
+                  <ExternalLink size={18} className="ml-2" />
+                </Button>
+              </a>
+            )}
+            <Link href="/mypage" className={method === "zoom" ? "flex-1" : "w-full"}>
               <Button
                 variant="outline"
                 className="w-full border-[var(--primary)] text-[var(--primary)] rounded-full py-6 text-lg"

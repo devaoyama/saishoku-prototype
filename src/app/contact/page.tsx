@@ -50,12 +50,12 @@ function ContactForm() {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    // Redirect based on consultation type
+    // Redirect based on consultation type（予約の場合は選択した Zoom/電話 を method で渡す）
     if (consultationType === "instant") {
       router.push(`/meeting?partner=${partnerId}&type=${connectionType}`);
     } else {
       router.push(
-        `/booking/complete?partner=${partnerId}&date=${selectedDate}&time=${selectedTime}`,
+        `/booking/complete?partner=${partnerId}&date=${selectedDate}&time=${selectedTime}&method=${connectionType}`,
       );
     }
   };
@@ -126,16 +126,15 @@ function ContactForm() {
             </Card>
           )}
 
-          {/* 即時面談の場合: Zoom / 電話 を選択 */}
-          {isInstant && (
-            <Card className="border-none shadow-soft mb-6">
-              <CardContent className="p-6">
-                <Label className="text-base font-medium text-[var(--foreground)] mb-3 block">
-                  接続方法を選択
-                </Label>
-                <p className="text-sm text-[var(--muted-foreground)] mb-4">
-                  面談はZoomまたは電話でご参加いただけます
-                </p>
+          {/* 即時面談 or 予約: Zoom / 電話 を選択 */}
+          <Card className="border-none shadow-soft mb-6">
+            <CardContent className="p-6">
+              <Label className="text-base font-medium text-[var(--foreground)] mb-3 block">
+                接続方法を選択
+              </Label>
+              <p className="text-sm text-[var(--muted-foreground)] mb-4">
+                面談はZoomまたは電話でご参加いただけます
+              </p>
                 <div className="grid grid-cols-2 gap-4">
                   <button
                     type="button"
@@ -190,7 +189,6 @@ function ContactForm() {
                 </div>
               </CardContent>
             </Card>
-          )}
 
           {/* Form */}
           <Card className="border-none shadow-soft">

@@ -223,7 +223,8 @@ export default function AIResumePage() {
                       <SelectContent>
                         {candidates.map((candidate) => (
                           <SelectItem key={candidate.id} value={candidate.id}>
-                            {candidate.name}（{candidate.currentCompany}）
+                            {candidate.name}
+                        {candidate.currentCompany ? `（${candidate.currentCompany}）` : ""}
                           </SelectItem>
                         ))}
                       </SelectContent>

@@ -1,19 +1,8 @@
 "use client";
 
-import { format } from "date-fns";
-import { ja } from "date-fns/locale";
-import {
-  ArrowLeft,
-  ChevronRight,
-  Mail,
-  Phone,
-  Search,
-  User,
-} from "lucide-react";
+import { ArrowLeft, ChevronRight, Search, User } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -27,48 +16,27 @@ import {
   type Candidate,
   candidates,
   partners,
-  tags,
 } from "@/lib/mock-data";
-
-const statusLabels: Record<Candidate["status"], string> = {
-  new: "新規",
-  in_progress: "対応中",
-  matched: "マッチング済",
-  hired: "入社決定",
-  declined: "辞退",
-};
-
-const statusColors: Record<Candidate["status"], string> = {
-  new: "bg-blue-500",
-  in_progress: "bg-yellow-500",
-  matched: "bg-purple-500",
-  hired: "bg-green-500",
-  declined: "bg-gray-500",
-};
 
 export default function CandidatesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [partnerFilter, setPartnerFilter] = useState<string>("all");
+  const [assigneeFilter, setAssigneeFilter] = useState<string>("all");
 
   const filteredCandidates = candidates.filter((candidate) => {
     const matchesSearch =
       candidate.name.includes(searchQuery) ||
-      candidate.email.includes(searchQuery) ||
-      candidate.currentCompany.includes(searchQuery);
+      candidate.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (candidate.email?.includes(searchQuery) ?? false);
     const matchesStatus =
-      statusFilter === "all" || candidate.status === statusFilter;
-    const matchesPartner =
-      partnerFilter === "all" || candidate.partnerId === partnerFilter;
-    return matchesSearch && matchesStatus && matchesPartner;
+      statusFilter === "all" || candidate.userStatus === statusFilter;
+    const matchesAssignee =
+      assigneeFilter === "all" || candidate.assigneeId === assigneeFilter;
+    return matchesSearch && matchesStatus && matchesAssignee;
   });
 
-  const getPartnerName = (partnerId: string) => {
-    return partners.find((p) => p.id === partnerId)?.name || "未割り当て";
-  };
-
-  const getCandidateTags = (tagIds: string[]) => {
-    return tags.filter((t) => tagIds.includes(t.id));
+  const getAgentName = (agentId: string) => {
+    return partners.find((p) => p.id === agentId)?.name ?? agentId;
   };
 
   return (
@@ -83,141 +51,118 @@ export default function CandidatesPage() {
         </Link>
         <h1 className="text-2xl font-bold text-foreground">候補者管理</h1>
         <p className="text-muted-foreground">
-          候補者の一覧・詳細・タグ編集を行います
+          CRM：候補者一覧（リスト表示）
         </p>
       </div>
 
       <Card className="border border-border bg-card shadow-sm mb-6">
-              <CardContent className="p-4">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex-1 relative">
-                    <Search
-                      size={18}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                    />
-                    <Input
-                      placeholder="名前・メール・会社名で検索..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-full md:w-40">
-                      <SelectValue placeholder="ステータス" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">すべて</SelectItem>
-                      <SelectItem value="new">新規</SelectItem>
-                      <SelectItem value="in_progress">対応中</SelectItem>
-                      <SelectItem value="matched">マッチング済</SelectItem>
-                      <SelectItem value="hired">入社決定</SelectItem>
-                      <SelectItem value="declined">辞退</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select value={partnerFilter} onValueChange={setPartnerFilter}>
-                    <SelectTrigger className="w-full md:w-40">
-                      <SelectValue placeholder="担当者" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">すべて</SelectItem>
-                      {partners.map((partner) => (
-                        <SelectItem key={partner.id} value={partner.id}>
-                          {partner.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
+        <CardContent className="p-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search
+                size={18}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
+              <Input
+                placeholder="候補者ID・名前・メールで検索..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full md:w-40">
+                <SelectValue placeholder="ユーザーステータス" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">すべて</SelectItem>
+                <SelectItem value="新規">新規</SelectItem>
+                <SelectItem value="対応中">対応中</SelectItem>
+                <SelectItem value="マッチング済">マッチング済</SelectItem>
+                <SelectItem value="入社決定">入社決定</SelectItem>
+                <SelectItem value="辞退">辞退</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={assigneeFilter} onValueChange={setAssigneeFilter}>
+              <SelectTrigger className="w-full md:w-40">
+                <SelectValue placeholder="担当者" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">すべて</SelectItem>
+                {partners.map((partner) => (
+                  <SelectItem key={partner.id} value={partner.id}>
+                    {partner.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
 
-            {/* Results Count */}
       <div className="mb-4 flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
           {filteredCandidates.length}件の候補者
         </p>
       </div>
 
-      <div className="space-y-4">
-        {filteredCandidates.map((candidate) => (
-          <Link
-            key={candidate.id}
-            href={`/admin/candidates/${candidate.id}`}
-          >
-            <Card className="border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-                            <User size={24} className="text-muted-foreground" />
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-bold text-foreground">
-                                {candidate.name}
-                              </h3>
-                              <Badge
-                                className={`${statusColors[candidate.status]} text-white text-xs`}
-                              >
-                                {statusLabels[candidate.status]}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground mb-2">
-                              {candidate.currentCompany} / {candidate.currentPosition}（{candidate.age}歳）
-                            </p>
-                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                              <span className="flex items-center gap-1">
-                                <Mail size={12} />
-                                {candidate.email}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Phone size={12} />
-                                {candidate.phone}
-                              </span>
-                            </div>
-                            {/* Tags */}
-                            <div className="flex flex-wrap gap-1 mt-3">
-                              {getCandidateTags(candidate.tagIds)
-                                .slice(0, 5)
-                                .map((tag) => (
-                                  <span
-                                    key={tag.id}
-                                    className="px-2 py-0.5 rounded-full text-xs text-white"
-                                    style={{ backgroundColor: tag.color }}
-                                  >
-                                    {tag.name}
-                                  </span>
-                                ))}
-                              {candidate.tagIds.length > 5 && (
-                                <span className="px-2 py-0.5 rounded-full text-xs bg-muted text-muted-foreground">
-                                  +{candidate.tagIds.length - 5}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs text-muted-foreground mb-1">
-                            担当: {getPartnerName(candidate.partnerId)}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            最終連絡:{" "}
-                            {format(new Date(candidate.lastContactAt), "M/d", {
-                              locale: ja,
-                            })}
-                          </p>
-                          <ChevronRight size={20} className="text-muted-foreground mt-2 ml-auto" />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
+      <Card className="border border-border bg-card shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/50">
+                <th className="text-left p-3 font-medium text-foreground">候補者ID</th>
+                <th className="text-left p-3 font-medium text-foreground">作成者</th>
+                <th className="text-left p-3 font-medium text-foreground">担当者</th>
+                <th className="text-left p-3 font-medium text-foreground">名前</th>
+                <th className="text-left p-3 font-medium text-foreground">生まれ年</th>
+                <th className="text-left p-3 font-medium text-foreground">学歴</th>
+                <th className="text-left p-3 font-medium text-foreground">転職意欲</th>
+                <th className="text-left p-3 font-medium text-foreground">希望の転職時期</th>
+                <th className="text-left p-3 font-medium text-foreground">経験社数</th>
+                <th className="text-left p-3 font-medium text-foreground">経験職種</th>
+                <th className="text-left p-3 font-medium text-foreground">希望職種</th>
+                <th className="w-10 p-3" />
+              </tr>
+            </thead>
+            <tbody>
+              {filteredCandidates.map((c: Candidate) => (
+                <tr
+                  key={c.id}
+                  className="border-b border-border hover:bg-muted/30 transition-colors"
+                >
+                  <td className="p-3 font-mono text-muted-foreground">{c.id}</td>
+                  <td className="p-3">{getAgentName(c.createdBy)}</td>
+                  <td className="p-3">{getAgentName(c.assigneeId)}</td>
+                  <td className="p-3 font-medium text-foreground">{c.name}</td>
+                  <td className="p-3">{c.birthYear ?? "—"}</td>
+                  <td className="p-3">{c.education ?? "—"}</td>
+                  <td className="p-3">{c.motivation ?? "—"}</td>
+                  <td className="p-3">{c.desiredTiming ?? "—"}</td>
+                  <td className="p-3">{c.experienceCompanyCount ?? "—"}</td>
+                  <td className="p-3 max-w-[120px] truncate" title={c.experienceJobTypes.join(", ")}>
+                    {c.experienceJobTypes.length ? c.experienceJobTypes.join(", ") : "—"}
+                  </td>
+                  <td className="p-3 max-w-[120px] truncate" title={c.desiredJobTypes.join(", ")}>
+                    {c.desiredJobTypes.length ? c.desiredJobTypes.join(", ") : "—"}
+                  </td>
+                  <td className="p-3">
+                    <Link
+                      href={`/admin/candidates/${c.id}`}
+                      className="inline-flex items-center justify-center text-muted-foreground hover:text-foreground"
+                    >
+                      <ChevronRight size={18} />
+                    </Link>
+                  </td>
+                </tr>
               ))}
-            </div>
+            </tbody>
+          </table>
+        </div>
+      </Card>
 
       {filteredCandidates.length === 0 && (
-        <Card className="border border-border bg-card shadow-sm">
+        <Card className="border border-border bg-card shadow-sm mt-4">
           <CardContent className="p-8 text-center">
             <User size={48} className="mx-auto mb-4 text-muted-foreground" />
             <p className="text-muted-foreground">

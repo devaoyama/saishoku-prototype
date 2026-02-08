@@ -102,7 +102,7 @@ function DiagnosisContent() {
           setIsAnalyzing(false);
           setCurrentStep("review");
           const candidateTags = tags.filter((t) =>
-            selectedCandidate?.tagIds.includes(t.id),
+            selectedCandidate?.tagIds?.includes(t.id) ?? false,
           );
           const hasLeadershipTag = candidateTags.some((t) =>
             ["マネジメント志向", "マネジメント経験"].includes(t.name),
@@ -275,7 +275,8 @@ function DiagnosisContent() {
                 <SelectContent>
                   {candidates.map((candidate) => (
                     <SelectItem key={candidate.id} value={candidate.id}>
-                      {candidate.name}（{candidate.currentCompany}）
+                      {candidate.name}
+                    {candidate.currentCompany ? `（${candidate.currentCompany}）` : ""}
                     </SelectItem>
                   ))}
                 </SelectContent>

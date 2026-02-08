@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { toast } from "sonner";
 import {
   PolarAngleAxis,
   PolarGrid,
@@ -23,6 +22,7 @@ import {
   RadarChart,
   ResponsiveContainer,
 } from "recharts";
+import { toast } from "sonner";
 import { FloatingFlowers } from "@/components/flower-decoration";
 import { Footer, Header } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
@@ -64,7 +64,7 @@ export default function AIDiagnosisPage() {
   const [result, setResult] = useState<DiagnosisResult | null>(null);
 
   const selectedCandidate = candidates.find(
-    (c) => c.id === selectedCandidateId
+    (c) => c.id === selectedCandidateId,
   );
 
   const handleStartDiagnosis = () => {
@@ -84,14 +84,14 @@ export default function AIDiagnosisPage() {
           setIsAnalyzing(false);
 
           // モック結果生成
-          const candidateTags = tags.filter((t) =>
-            selectedCandidate?.tagIds.includes(t.id)
+          const candidateTags = tags.filter(
+            (t) => selectedCandidate?.tagIds?.includes(t.id) ?? false,
           );
           const hasLeadershipTag = candidateTags.some((t) =>
-            ["マネジメント志向", "マネジメント経験"].includes(t.name)
+            ["マネジメント志向", "マネジメント経験"].includes(t.name),
           );
           const hasSalesTag = candidateTags.some((t) =>
-            ["営業志向", "法人営業経験", "新規開拓経験"].includes(t.name)
+            ["営業志向", "法人営業経験", "新規開拓経験"].includes(t.name),
           );
 
           setResult({
@@ -100,7 +100,11 @@ export default function AIDiagnosisPage() {
             dimensions: [
               { name: "コミュニケーション", score: 85, fullMark: 100 },
               { name: "論理的思考", score: 72, fullMark: 100 },
-              { name: "リーダーシップ", score: hasLeadershipTag ? 80 : 65, fullMark: 100 },
+              {
+                name: "リーダーシップ",
+                score: hasLeadershipTag ? 80 : 65,
+                fullMark: 100,
+              },
               { name: "行動力", score: 88, fullMark: 100 },
               { name: "専門性", score: hasSalesTag ? 75 : 68, fullMark: 100 },
               { name: "成長意欲", score: 90, fullMark: 100 },
@@ -187,7 +191,10 @@ export default function AIDiagnosisPage() {
                       <SelectContent>
                         {candidates.map((candidate) => (
                           <SelectItem key={candidate.id} value={candidate.id}>
-                            {candidate.name}（{candidate.currentCompany}）
+                            {candidate.name}
+                            {candidate.currentCompany
+                              ? `（${candidate.currentCompany}）`
+                              : ""}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -225,7 +232,10 @@ export default function AIDiagnosisPage() {
                   <h3 className="font-bold text-[var(--foreground)] mb-2">
                     AIが診断中...
                   </h3>
-                  <Progress value={progress} className="mb-4 max-w-md mx-auto" />
+                  <Progress
+                    value={progress}
+                    className="mb-4 max-w-md mx-auto"
+                  />
                   <p className="text-sm text-[var(--muted-foreground)]">
                     候補者の情報とタグを分析しています
                   </p>
@@ -265,7 +275,10 @@ export default function AIDiagnosisPage() {
                       <ResponsiveContainer width="100%" height="100%">
                         <RadarChart data={result.dimensions}>
                           <PolarGrid />
-                          <PolarAngleAxis dataKey="name" tick={{ fontSize: 12 }} />
+                          <PolarAngleAxis
+                            dataKey="name"
+                            tick={{ fontSize: 12 }}
+                          />
                           <Radar
                             name="スコア"
                             dataKey="score"
@@ -343,10 +356,12 @@ export default function AIDiagnosisPage() {
                     <div className="bg-[var(--muted)] rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm text-[var(--muted-foreground)]">
-                          {(result.marketValue.min / 10000).toLocaleString()}万円
+                          {(result.marketValue.min / 10000).toLocaleString()}
+                          万円
                         </span>
                         <span className="text-sm text-[var(--muted-foreground)]">
-                          {(result.marketValue.max / 10000).toLocaleString()}万円
+                          {(result.marketValue.max / 10000).toLocaleString()}
+                          万円
                         </span>
                       </div>
                       <div className="relative h-4 bg-gray-200 rounded-full overflow-hidden">
@@ -361,7 +376,9 @@ export default function AIDiagnosisPage() {
                       </div>
                       <p className="text-center mt-2">
                         <span className="text-2xl font-bold text-[var(--primary)]">
-                          {(result.marketValue.average / 10000).toLocaleString()}
+                          {(
+                            result.marketValue.average / 10000
+                          ).toLocaleString()}
                         </span>
                         <span className="text-[var(--foreground)]">万円</span>
                         <span className="text-sm text-[var(--muted-foreground)] ml-2">
@@ -388,7 +405,9 @@ export default function AIDiagnosisPage() {
                           <div className="w-8 h-8 rounded-full bg-[var(--primary)] text-white flex items-center justify-center text-sm font-bold">
                             {i + 1}
                           </div>
-                          <span className="text-[var(--foreground)]">{rec}</span>
+                          <span className="text-[var(--foreground)]">
+                            {rec}
+                          </span>
                         </div>
                       ))}
                     </div>

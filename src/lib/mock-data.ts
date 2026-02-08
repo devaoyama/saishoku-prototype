@@ -40,111 +40,249 @@ export const tags: Tag[] = [
 ];
 
 // ============================================
-// 候補者データ
+// 候補者データ（CRM設計）
 // ============================================
 export type Candidate = {
   id: string;
+  createdBy: string;   // 作成者（エージェント/パートナーID）
+  assigneeId: string;  // 担当者
+  selectedAgentId?: string;  // 選択エージェント
+  handlingAgentId?: string;  // 対応エージェント
   name: string;
-  email: string;
-  phone: string;
-  age: number;
-  currentCompany: string;
-  currentPosition: string;
-  currentSalary: number;
-  desiredSalary: number;
-  tagIds: string[];
-  partnerId: string;
-  status: "new" | "in_progress" | "matched" | "hired" | "declined";
+  address?: string;
+  birthYear?: number;
+  postalCode?: string;
+  prefecture?: string;
+  gender?: string;
+  desiredTiming?: string;
+  desiredSalary?: number;
+  qualifications?: string;
+  desiredJobTypes: string[];
+  experienceJobTypes: string[];
+  education?: string;
+  motivation?: string;
+  experienceCompanyCount?: number;
+  userStatus: string;  // ユーザーステータス（新規・対応中・マッチング済・入社決定・辞退 等）
+  callDate?: string;
+  firstMeetingDate?: string;
+  jobProposalDate?: string;
+  recommendationDate?: string;
+  interviewSettingDate?: string;
+  interviewSettingCount?: number;
+  ngDate?: string;
+  ngReason?: string;
+  email?: string;
+  phone?: string;
+  memo?: string;
   createdAt: string;
-  lastContactAt: string;
-  memo: string;
+  lastContactAt?: string;
+  // AI・他機能用互換
+  tagIds?: string[];
+  partnerId?: string;
+  currentCompany?: string;
+  currentPosition?: string;
+  currentSalary?: number;
 };
+
+function calcAge(birthYear: number | undefined): number | undefined {
+  if (birthYear == null) return undefined;
+  return new Date().getFullYear() - birthYear;
+}
+
+export function getCandidateAge(c: Candidate): number | undefined {
+  return calcAge(c.birthYear);
+}
 
 export const candidates: Candidate[] = [
   {
     id: "c1",
+    createdBy: "1",
+    assigneeId: "1",
+    selectedAgentId: "1",
+    handlingAgentId: "1",
     name: "田中 太郎",
+    address: "東京都渋谷区",
+    birthYear: 1998,
+    postalCode: "150-0000",
+    prefecture: "東京都",
+    gender: "男",
+    desiredTiming: "2026年Q2",
+    desiredSalary: 5000000,
+    qualifications: "普通自動車免許",
+    desiredJobTypes: ["法人営業", "営業企画"],
+    experienceJobTypes: ["法人営業", "新規開拓"],
+    education: "大学卒",
+    motivation: "高",
+    experienceCompanyCount: 2,
+    userStatus: "対応中",
+    callDate: "2026-01-10",
+    firstMeetingDate: "2026-01-15",
+    jobProposalDate: "2026-01-25",
+    recommendationDate: "",
+    interviewSettingDate: "",
+    interviewSettingCount: 0,
     email: "tanaka@example.com",
     phone: "090-1234-5678",
-    age: 26,
+    memo: "転職意欲高い。営業成績トップ5の実績あり。",
+    createdAt: "2026-01-15",
+    lastContactAt: "2026-02-01",
+    tagIds: ["t1", "t7", "t13", "t17", "t19"],
+    partnerId: "1",
     currentCompany: "株式会社ABC",
     currentPosition: "営業",
     currentSalary: 4000000,
-    desiredSalary: 5000000,
-    tagIds: ["t1", "t7", "t13", "t17", "t19"],
-    partnerId: "1",
-    status: "in_progress",
-    createdAt: "2026-01-15",
-    lastContactAt: "2026-02-01",
-    memo: "転職意欲高い。営業成績トップ5の実績あり。",
   },
   {
     id: "c2",
+    createdBy: "3",
+    assigneeId: "3",
+    selectedAgentId: "3",
+    handlingAgentId: "3",
     name: "佐藤 花子",
+    address: "神奈川県横浜市",
+    birthYear: 2000,
+    postalCode: "220-0000",
+    prefecture: "神奈川県",
+    gender: "女",
+    desiredTiming: "2026年Q3",
+    desiredSalary: 4000000,
+    qualifications: "",
+    desiredJobTypes: ["企画", "マーケティング"],
+    experienceJobTypes: ["営業事務", "アシスタント"],
+    education: "大学卒",
+    motivation: "中",
+    experienceCompanyCount: 1,
+    userStatus: "マッチング済",
+    callDate: "2026-01-05",
+    firstMeetingDate: "2026-01-10",
+    jobProposalDate: "2026-01-20",
+    recommendationDate: "2026-01-28",
+    interviewSettingDate: "2026-02-05",
+    interviewSettingCount: 2,
     email: "sato@example.com",
     phone: "090-2345-6789",
-    age: 24,
+    memo: "企画職への転換希望。",
+    createdAt: "2026-01-10",
+    lastContactAt: "2026-01-30",
+    tagIds: ["t2", "t8", "t14", "t18", "t12"],
+    partnerId: "3",
     currentCompany: "株式会社DEF",
     currentPosition: "営業事務",
     currentSalary: 3200000,
-    desiredSalary: 4000000,
-    tagIds: ["t2", "t8", "t14", "t18", "t12"],
-    partnerId: "3",
-    status: "matched",
-    createdAt: "2026-01-10",
-    lastContactAt: "2026-01-30",
-    memo: "企画職への転換希望。コミュニケーション能力高い。",
   },
   {
     id: "c3",
+    createdBy: "2",
+    assigneeId: "2",
+    selectedAgentId: "2",
+    handlingAgentId: "2",
     name: "鈴木 一郎",
+    address: "東京都港区",
+    birthYear: 1996,
+    postalCode: "105-0000",
+    prefecture: "東京都",
+    gender: "男",
+    desiredTiming: "2026年Q1",
+    desiredSalary: 7000000,
+    qualifications: "TOEIC 800",
+    desiredJobTypes: ["セールスマネージャー", "事業開発"],
+    experienceJobTypes: ["法人営業", "マネジメント"],
+    education: "大学院卒",
+    motivation: "高",
+    experienceCompanyCount: 3,
+    userStatus: "対応中",
+    callDate: "2026-01-18",
+    firstMeetingDate: "2026-01-22",
+    jobProposalDate: "",
+    recommendationDate: "",
+    interviewSettingDate: "",
+    interviewSettingCount: 0,
     email: "suzuki@example.com",
     phone: "090-3456-7890",
-    age: 28,
+    memo: "マネジメント経験あり。ベンチャー希望。",
+    createdAt: "2026-01-20",
+    lastContactAt: "2026-02-02",
+    tagIds: ["t3", "t9", "t15", "t11", "t19", "t21"],
+    partnerId: "2",
     currentCompany: "株式会社GHI",
     currentPosition: "法人営業",
     currentSalary: 5500000,
-    desiredSalary: 7000000,
-    tagIds: ["t3", "t9", "t15", "t11", "t19", "t21"],
-    partnerId: "2",
-    status: "in_progress",
-    createdAt: "2026-01-20",
-    lastContactAt: "2026-02-02",
-    memo: "マネジメント経験あり。ベンチャーへの転職希望。",
   },
   {
     id: "c4",
+    createdBy: "1",
+    assigneeId: "1",
+    selectedAgentId: "1",
+    handlingAgentId: "1",
     name: "高橋 美咲",
+    address: "大阪府大阪市",
+    birthYear: 1999,
+    postalCode: "530-0000",
+    prefecture: "大阪府",
+    gender: "女",
+    desiredTiming: "未定",
+    desiredSalary: 4500000,
+    qualifications: "",
+    desiredJobTypes: ["カスタマーサクセス", "営業"],
+    experienceJobTypes: ["カスタマーサクセス"],
+    education: "大学卒",
+    motivation: "中",
+    experienceCompanyCount: 1,
+    userStatus: "新規",
+    callDate: "2026-02-01",
+    firstMeetingDate: "",
+    jobProposalDate: "",
+    recommendationDate: "",
+    interviewSettingDate: "",
+    interviewSettingCount: 0,
     email: "takahashi@example.com",
     phone: "090-4567-8901",
-    age: 25,
+    memo: "初回面談予定。",
+    createdAt: "2026-02-01",
+    lastContactAt: "2026-02-01",
+    tagIds: ["t5", "t7", "t13", "t17", "t20"],
+    partnerId: "1",
     currentCompany: "株式会社JKL",
     currentPosition: "カスタマーサクセス",
     currentSalary: 3800000,
-    desiredSalary: 4500000,
-    tagIds: ["t5", "t7", "t13", "t17", "t20"],
-    partnerId: "1",
-    status: "new",
-    createdAt: "2026-02-01",
-    lastContactAt: "2026-02-01",
-    memo: "初回面談予定。",
   },
   {
     id: "c5",
+    createdBy: "5",
+    assigneeId: "5",
+    selectedAgentId: "5",
+    handlingAgentId: "5",
     name: "伊藤 健",
+    address: "東京都新宿区",
+    birthYear: 1997,
+    postalCode: "160-0000",
+    prefecture: "東京都",
+    gender: "男",
+    desiredTiming: "2026年Q1",
+    desiredSalary: 5500000,
+    qualifications: "基本情報技術者",
+    desiredJobTypes: ["インサイドセールス", "営業"],
+    experienceJobTypes: ["インサイドセールス", "新規開拓"],
+    education: "大学卒",
+    motivation: "高",
+    experienceCompanyCount: 2,
+    userStatus: "入社決定",
+    callDate: "2025-11-25",
+    firstMeetingDate: "2025-12-01",
+    jobProposalDate: "2025-12-10",
+    recommendationDate: "2025-12-15",
+    interviewSettingDate: "2026-01-10",
+    interviewSettingCount: 3,
     email: "ito@example.com",
     phone: "090-5678-9012",
-    age: 27,
+    memo: "入社決定！株式会社XYZ。",
+    createdAt: "2025-12-01",
+    lastContactAt: "2026-01-25",
+    tagIds: ["t1", "t7", "t15", "t11", "t22"],
+    partnerId: "5",
     currentCompany: "株式会社MNO",
     currentPosition: "インサイドセールス",
     currentSalary: 4200000,
-    desiredSalary: 5500000,
-    tagIds: ["t1", "t7", "t15", "t11", "t22"],
-    partnerId: "5",
-    status: "hired",
-    createdAt: "2025-12-01",
-    lastContactAt: "2026-01-25",
-    memo: "入社決定！株式会社XYZ。",
   },
 ];
 
